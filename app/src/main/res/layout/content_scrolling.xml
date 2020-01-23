@@ -96,6 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
+                        android:layout_margin="@dimen/std_margin"
                         android:baselineAligned="false">
 
                         <LinearLayout
@@ -262,12 +263,57 @@
                 android:layout_height="120dp"
                 android:layout_margin="@dimen/std_margin">
 
-                <TextView
-                    android:id="@+id/textView_adress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/estate_adress" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/std_margin"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/estate_address" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:baselineAligned="false">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:layout_margin="@dimen/std_margin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_place"
+                                android:contentDescription="@string/estate_address_hint" />
+
+                            <EditText
+                                android:id="@+id/edittext_address"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:hint="@string/estate_address_hint"
+                                android:importantForAutofill="no" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
             </androidx.cardview.widget.CardView>
 
@@ -278,6 +324,7 @@
                 android:layout_gravity="center">
 
                 <Button
+                    android:id="@+id/button_continue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_radius_corner"
