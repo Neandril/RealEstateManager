@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+
+    <!-- MENU -->
+    <string name="action_add">Add</string>
+    <string name="action_search">Search</string>
+
+    <string name="collasping_toolbar_text">Please fill the fields below.\nThis real estate will be added to the database</string>
+    <string name="estate_information">GENERAL INFORMATIONS</string>
+    <string name="estate_price_hint">Price</string>
+    <string name="estate_surface_hint">Surface</string>
+    <string name="estate_rooms">ROOMS DETAILS</string>
+    <string name="nb_bathrooms">Bathroom</string>
+    <string name="nb_bedrooms">Bedroom</string>
+    <string name="nb_other_rooms">Other</string>
+    <string name="estate_adress">ADRESS</string>
+    <string name="button_valid">CONTINUE</string>
+
+    <string-array name="estate_type">
+        <item>Apartment</item>
+        <item>Loft</item>
+        <item>Manor</item>
+        <item>Penthouse</item>
+    </string-array>
+
+</resources>
