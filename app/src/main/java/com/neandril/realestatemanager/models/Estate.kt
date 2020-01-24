@@ -8,4 +8,6 @@ import androidx.room.PrimaryKey
 data class Estate (
     @PrimaryKey @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "price") val price: String
-)
+) {
+    var isExpanded = false
+}

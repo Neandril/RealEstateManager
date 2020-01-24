@@ -27,9 +27,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                tools:src="@drawable/add_image"/>
+                android:id="@+id/main_recyclerview_thumbnail"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/add_image"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,52 +41,164 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_place" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/std_margin"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/main_recyclerview_address_textview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:text="Apartment" />
+
+                    <ImageButton
+                        android:id="@+id/imageView_drop_down_arrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ADRESS"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_price" />
-
-                    <TextView
-                        android:id="@+id/main_recyclerview_price_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PRICE"/>
+                        android:layout_weight="0.1"
+                        android:background="@color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/ic_arrow_drop_down"
+                        android:focusable="true" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom">
+                    android:layout_margin="@dimen/std_margin"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_agent" />
+                        android:layout_marginEnd="@dimen/std_margin"
+                        android:src="@drawable/ic_surface" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="AGENT"/>
+                        android:layout_weight="0.5"
+                        android:text="Surface"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/std_margin"
+                        android:src="@drawable/ic_price" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="Price" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/subitem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/std_margin"
+                    android:layout_marginEnd="@dimen/std_margin"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.33">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_bathroom" />
+
+                            <TextView
+                                android:id="@+id/main_recyclerview_address_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/std_margin"
+                                android:text="12"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.33">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_bedroom" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/std_margin"
+                                android:text="12"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.33">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_other_rooms" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/std_margin"
+                                android:text="12"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_place" />
+
+                        <TextView
+                            android:id="@+id/main_recyclerview_price_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ADRESS"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_agent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AGENT"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

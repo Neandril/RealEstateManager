@@ -32,7 +32,7 @@
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
-                android:src="@drawable/estate" />
+                android:src="@drawable/create_estate_background" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="@dimen/std_margin"
                 android:text="@string/collasping_toolbar_text"
-                android:textColor="@color/colorSecondary"
+                android:textColor="@color/colorWhite"
                 android:textStyle="bold"
                 android:textSize="24sp"
                 app:layout_collapseMode="parallax"/>
