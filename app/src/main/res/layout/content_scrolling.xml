@@ -42,7 +42,8 @@
                         android:layout_margin="@dimen/std_margin"
                         android:scaleType="centerCrop"
                         android:layout_weight="0.555"
-                        android:src="@drawable/add_image" />
+                        android:src="@drawable/add_image"
+                        android:contentDescription="@string/thumbnail_content_description" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
@@ -87,9 +88,9 @@
                         <Spinner
                             android:id="@+id/spinner_estate"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:layout_margin="@dimen/std_margin" />
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/std_margin"
+                            android:layout_marginEnd="@dimen/std_margin"/>
 
                     </LinearLayout>
 
@@ -106,18 +107,12 @@
                             android:layout_weight="0.5"
                             android:layout_margin="@dimen/std_margin">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_price"
-                                android:contentDescription="@string/estate_price_hint" />
-
                             <EditText
                                 android:id="@+id/edittext_price"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
+                                android:drawableStart="@drawable/ic_price"
                                 android:inputType="number"
                                 android:hint="@string/estate_price_hint"
                                 android:importantForAutofill="no" />
@@ -130,17 +125,11 @@
                             android:layout_weight="0.5"
                             android:layout_margin="@dimen/std_margin">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_surface"
-                                android:contentDescription="@string/estate_surface_hint" />
-
                             <EditText
                                 android:id="@+id/edittext_surface"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_surface"
                                 android:textAlignment="center"
                                 android:inputType="number"
                                 android:hint="@string/estate_surface_hint"
@@ -188,17 +177,11 @@
                         android:layout_weight="0.33"
                         android:layout_margin="@dimen/std_margin">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_bathroom"
-                            android:contentDescription="@string/nb_bathrooms" />
-
                         <EditText
                             android:id="@+id/edittext_nb_bathroom"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_bathroom"
                             android:textAlignment="center"
                             android:inputType="number"
                             android:hint="@string/nb_bathrooms"
@@ -212,19 +195,13 @@
                         android:layout_weight="0.33"
                         android:layout_margin="@dimen/std_margin">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_bedroom"
-                            android:contentDescription="@string/nb_bedrooms" />
-
                         <EditText
                             android:id="@+id/edittext_nb_bedroom"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:inputType="number"
+                            android:drawableStart="@drawable/ic_bedroom"
                             android:hint="@string/nb_bedrooms"
                             android:importantForAutofill="no" />
 
@@ -236,17 +213,11 @@
                         android:layout_weight="0.33"
                         android:layout_margin="@dimen/std_margin">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_other_rooms"
-                            android:contentDescription="@string/nb_other_rooms" />
-
                         <EditText
                             android:id="@+id/edittext_nb_other_rooms"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_other_rooms"
                             android:textAlignment="center"
                             android:inputType="number"
                             android:hint="@string/nb_other_rooms"
@@ -294,17 +265,11 @@
                             android:layout_weight="0.5"
                             android:layout_margin="@dimen/std_margin">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_place"
-                                android:contentDescription="@string/estate_address_hint" />
-
                             <EditText
                                 android:id="@+id/edittext_address"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_place"
                                 android:textAlignment="center"
                                 android:hint="@string/estate_address_hint"
                                 android:importantForAutofill="no" />
@@ -314,7 +279,6 @@
                     </LinearLayout>
 
                 </LinearLayout>
-
 
             </androidx.cardview.widget.CardView>
 

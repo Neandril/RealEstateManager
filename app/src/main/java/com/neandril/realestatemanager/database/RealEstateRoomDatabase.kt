@@ -6,11 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.neandril.realestatemanager.models.Estate
+import com.neandril.realestatemanager.utils.toSquare
+import com.neandril.realestatemanager.utils.toThousand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [Estate::class], version = 1, exportSchema = false)
-public abstract class RealEstateRoomDatabase : RoomDatabase() {
+abstract class RealEstateRoomDatabase : RoomDatabase() {
 
     abstract fun estateDao(): EstateDao
 
@@ -32,7 +34,7 @@ public abstract class RealEstateRoomDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     RealEstateRoomDatabase::class.java,
-                    "word_database"
+                    "estate_manager_database"
                 )
                     .addCallback(EstateDatabaseCallback(scope))
                     .build()
@@ -59,13 +61,11 @@ public abstract class RealEstateRoomDatabase : RoomDatabase() {
             // Delete all content here.
             estateDao.deleteAll()
 
-            // Add sample words.
-            var estate = Estate("Hello", "120.000")
+            // Add sample estate.
+            var estate = Estate("This is an address", "Apartment", "120000".toThousand(), "150".toSquare(), "3", "2", "5")
             estateDao.insert(estate)
-            estate = Estate("World!", "150.000")
+            estate = Estate("And an another address", "Manor", "3585000".toThousand(), "1125".toSquare(), "7", "5", "8")
             estateDao.insert(estate)
-
-            // TODO: Add your own words!
         }
     }
 }

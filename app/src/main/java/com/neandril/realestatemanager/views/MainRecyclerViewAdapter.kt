@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
+// Example : Estate("Hello", "Apartment", "1.200.00", "150 m²", "3", "2", "5")
 
 class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerView.Adapter<MainRecyclerViewAdapter.EstateViewHolder>() {
 
@@ -21,8 +22,13 @@ class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerV
         val dropdownArrow: ImageButton = itemView.findViewById(R.id.imageView_drop_down_arrow)
         private val thumbnail: ImageView = itemView.findViewById(R.id.main_recyclerview_thumbnail)
         private val addressItemView: TextView = itemView.findViewById(R.id.main_recyclerview_address_textview)
+        private val typeItemView: TextView = itemView.findViewById(R.id.main_recyclerview_type_textview)
         private val priceItemView: TextView = itemView.findViewById(R.id.main_recyclerview_price_textview)
-        private val subitem: View = itemView.findViewById(R.id.subitem)
+        private val subItem: View = itemView.findViewById(R.id.subitem)
+        private val surfaceItemView: TextView = itemView.findViewById(R.id.main_recyclerview_surface_textview)
+        private val nbBathRoomsItemView: TextView = itemView.findViewById(R.id.main_recyclerview_nbBathRooms_textview)
+        private val nbBedRoomsItemView: TextView = itemView.findViewById(R.id.main_recyclerview_nbBedRooms_textview)
+        private val nbOtherRoomsItemView: TextView = itemView.findViewById(R.id.main_recyclerview_nbOtherRooms_textview)
 
         fun bind(estate: Estate) {
             thumbnail.requestLayout()
@@ -30,20 +36,25 @@ class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerV
 
             if (expanded) {
                 // Configure widget when expanded
-                subitem.visibility = View.VISIBLE
+                subItem.visibility = View.VISIBLE
                 dropdownArrow.setImageResource(R.drawable.ic_arrow_drop_up)
                 thumbnail.layoutParams.height = 400
                 thumbnail.layoutParams.width = 400
             } else {
                 // Configure widget when collapsed
-                subitem.visibility = View.GONE
+                subItem.visibility = View.GONE
                 dropdownArrow.setImageResource(R.drawable.ic_arrow_drop_down)
                 thumbnail.layoutParams.height = 200
                 thumbnail.layoutParams.width = 200
             }
 
+            typeItemView.text = estate.type
             addressItemView.text = estate.address
             priceItemView.text = estate.price
+            surfaceItemView.text = estate.surface
+            nbBathRoomsItemView.text = estate.nbBathrooms
+            nbBedRoomsItemView.text = estate.nbBedrooms
+            nbOtherRoomsItemView.text = estate.nbOtherRooms
         }
     }
 

@@ -1,10 +1,6 @@
 package com.neandril.realestatemanager.views.activities
 
-import android.app.Activity
-import android.content.ClipData.Item
-import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -12,6 +8,8 @@ import android.widget.Spinner
 import androidx.lifecycle.ViewModelProvider
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
+import com.neandril.realestatemanager.utils.toSquare
+import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.base.BaseActivity
 
@@ -22,6 +20,11 @@ class CreateRealEstate : BaseActivity() {
     private lateinit var spinner: Spinner
     private lateinit var addressEditText: EditText
     private lateinit var priceEditText: EditText
+    private lateinit var surfaceEditText: EditText
+    private lateinit var nbBathRoomsEditText: EditText
+    private lateinit var nbBedRoomsEditText: EditText
+    private lateinit var nbOtherRoomsEditText: EditText
+
 
     companion object {
         const val EXTRA_REPLY = "com.neandril.realestatemanager.estateListSql.REPLY"
@@ -37,13 +40,22 @@ class CreateRealEstate : BaseActivity() {
         spinner = findViewById(R.id.spinner_estate)
         addressEditText = findViewById(R.id.edittext_address)
         priceEditText = findViewById(R.id.edittext_price)
+        surfaceEditText = findViewById(R.id.edittext_surface)
+        nbBathRoomsEditText = findViewById(R.id.edittext_nb_bathroom)
+        nbBedRoomsEditText = findViewById(R.id.edittext_nb_bedroom)
+        nbOtherRoomsEditText = findViewById(R.id.edittext_nb_other_rooms)
 
         val button = findViewById<Button>(R.id.button_continue)
         button.setOnClickListener {
-
+            // Example : Estate("Hello", "Apartment", "1.200.00", "150 m²", "3", "2", "5")
             val estate = Estate(
                 addressEditText.text.toString(),
-                priceEditText.text.toString()
+                spinner.selectedItem.toString(),
+                priceEditText.text.toString().toThousand(),
+                surfaceEditText.text.toString().toSquare(),
+                nbBathRoomsEditText.text.toString(),
+                nbBedRoomsEditText.text.toString(),
+                nbOtherRoomsEditText.text.toString()
             )
 
             estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)

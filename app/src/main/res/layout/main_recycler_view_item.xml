@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-<!--    <TextView
-        android:id="@+id/main_item_text_view"
-        style="@style/word_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_orange_light" />-->
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -30,7 +22,8 @@
                 android:id="@+id/main_recyclerview_thumbnail"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/add_image"/>
+                android:src="@drawable/add_image"
+                android:contentDescription="@string/thumbnail_content_description" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,12 +39,12 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/main_recyclerview_type_textview"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.8"
                         android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:text="Apartment" />
+                        android:textSize="18sp" />
 
                     <ImageButton
                         android:id="@+id/imageView_drop_down_arrow"
@@ -61,7 +54,8 @@
                         android:background="@color/transparent"
                         android:clickable="true"
                         android:src="@drawable/ic_arrow_drop_down"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:contentDescription="@string/icon_drop_down_content_description" />
 
                 </LinearLayout>
 
@@ -71,29 +65,21 @@
                     android:layout_margin="@dimen/std_margin"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <TextView
+                        android:id="@+id/main_recyclerview_surface_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/std_margin"
-                        android:src="@drawable/ic_surface" />
+                        android:textAlignment="center"
+                        android:layout_weight="0.5"
+                        android:drawableStart="@drawable/ic_surface"/>
 
                     <TextView
+                        android:id="@+id/main_recyclerview_price_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAlignment="center"
                         android:layout_weight="0.5"
-                        android:text="Surface"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/std_margin"
-                        android:src="@drawable/ic_price" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="Price" />
+                        android:drawableStart="@drawable/ic_price"/>
 
                 </LinearLayout>
 
@@ -107,24 +93,20 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_bathroom" />
-
                             <TextView
-                                android:id="@+id/main_recyclerview_address_textview"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/main_recyclerview_nbBathRooms_textview"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/std_margin"
-                                android:text="12"/>
+                                android:textAlignment="center"
+                                android:drawableStart="@drawable/ic_bathroom" />
 
                         </LinearLayout>
 
@@ -133,16 +115,12 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_bedroom" />
-
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:id="@+id/main_recyclerview_nbBedRooms_textview"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/std_margin"
-                                android:text="12"/>
+                                android:textAlignment="center"
+                                android:drawableStart="@drawable/ic_bedroom" />
 
                         </LinearLayout>
 
@@ -151,16 +129,12 @@
                             android:layout_height="match_parent"
                             android:layout_weight="0.33">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_other_rooms" />
-
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:id="@+id/main_recyclerview_nbOtherRooms_textview"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/std_margin"
-                                android:text="12"/>
+                                android:textAlignment="center"
+                                android:drawableStart="@drawable/ic_other_rooms" />
 
                         </LinearLayout>
 
@@ -170,16 +144,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_place" />
-
                         <TextView
-                            android:id="@+id/main_recyclerview_price_textview"
+                            android:id="@+id/main_recyclerview_address_textview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ADRESS"/>
+                            android:drawableStart="@drawable/ic_place"/>
 
                     </LinearLayout>
 
@@ -188,15 +157,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_agent" />
-
                         <TextView
+                            android:id="@+id/main_recyclerview_agent_textview"
+                            android:drawableStart="@drawable/ic_agent"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="AGENT"/>
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
 
