@@ -1,30 +1,32 @@
 package com.neandril.realestatemanager.views.activities
 
-import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.navigation.NavigationView
 import com.neandril.realestatemanager.R
-import com.neandril.realestatemanager.models.Estate
-import com.neandril.realestatemanager.viewmodels.EstateViewModel
-import com.neandril.realestatemanager.views.MainRecyclerViewAdapter
 import com.neandril.realestatemanager.views.base.BaseActivity
+import com.neandril.realestatemanager.views.fragments.FragmentMain
 
-import kotlinx.android.synthetic.main.activity_main.*
-
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val newEstateActivityRequestCode = 1
     private lateinit var toolbar: Toolbar
-    private lateinit var estateViewModel: EstateViewModel
+
+    private lateinit var drawer: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+
+    // ***************************
+    // BASE METHODS
+    // ***************************
 
     override fun getActivityLayout(): Int {
         return R.layout.activity_main
@@ -37,20 +39,25 @@ class MainActivity : BaseActivity() {
         toolbar = findViewById(R.id.toolbar_common)
         setSupportActionBar(toolbar)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = MainRecyclerViewAdapter(this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        this.configureDrawer()
 
-        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-        estateViewModel.allEstates.observe(this, Observer { estates ->
-            estates?.let { adapter.setEstate(it) }
-        })
+        showFragment(FragmentMain())
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+    }
+
+    // ***************************
+    // UI SETUP
+    // ***************************
+
+    private fun configureDrawer() {
+        drawer = findViewById(R.id.drawer_layout)
+
+        toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer.addDrawerListener(toggle)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -59,36 +66,49 @@ class MainActivity : BaseActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        toggle.syncState()
+    }
 
-        if (id == R.id.action_add) {
-            Toast.makeText(this, "Add Clicked", Toast.LENGTH_LONG).show()
-            val intent = Intent(this, CreateRealEstate::class.java)
-            startActivityForResult(intent, newEstateActivityRequestCode)
-        }
-        if (id == R.id.action_search) {
-            Toast.makeText(this, "Search Clicked", Toast.LENGTH_LONG).show()
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        toggle.onConfigurationChanged(newConfig)
+    }
+
+
+    // ***************************
+    // ACTION CLICKS EVENTS
+    // ***************************
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_add -> this.launchCreateNewEstateActivity()
+            R.id.action_search -> Toast.makeText(this, "Search Clicked", Toast.LENGTH_LONG).show()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-/*    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intentData)
-
-        if (requestCode == newEstateActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            intentData?.getStringExtra(CreateRealEstate.EXTRA_REPLY)?.let {
-                val estate = Estate(it)
-                estateViewModel.insert(estate)
-                Unit
-            }
-        } else {
-            Toast.makeText(
-                applicationContext,
-                "not saved",
-                Toast.LENGTH_LONG
-            ).show()
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_item_one -> Toast.makeText(this, "Item one", Toast.LENGTH_LONG).show()
+            R.id.nav_item_two -> Toast.makeText(this, "Item two", Toast.LENGTH_LONG).show()
+            R.id.nav_item_three -> Toast.makeText(this, "Item three", Toast.LENGTH_LONG).show()
         }
-    }*/
+        drawer.closeDrawer(GravityCompat.START)
+
+        return true
+    }
+
+    private fun showFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction()
+            .replace(R.id.content_frame, fragment)
+            .commit()
+    }
+
+    private fun launchCreateNewEstateActivity() {
+        val intent = Intent(this, CreateRealEstate::class.java)
+        startActivityForResult(intent, newEstateActivityRequestCode)
+    }
 }

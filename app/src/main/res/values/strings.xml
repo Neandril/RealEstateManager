@@ -4,6 +4,8 @@
     <!-- MENU -->
     <string name="action_add">Add</string>
     <string name="action_search">Search</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="collasping_toolbar_text">Please fill the fields below.\nThis real estate will be added to the database</string>
     <string name="estate_information">GENERAL INFORMATIONS</string>
@@ -30,5 +32,8 @@
         <item>Manor</item>
         <item>Penthouse</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

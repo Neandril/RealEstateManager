@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/nav_item_one"
+            android:icon="@drawable/ic_other_rooms"
+            android:title="Item 1" />
+        <item android:id="@+id/nav_item_two"
+            android:icon="@drawable/ic_bedroom"
+            android:title="Item 2" />
+        <item android:id="@+id/nav_item_three"
+            android:icon="@drawable/ic_bathroom"
+            android:title="Item 3" />
+    </group>
+</menu>
