@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     tools:context=".views.activities.CreateRealEstate">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -23,7 +23,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:title="Create Real Estate"
             app:expandedTitleMargin="@dimen/std_margin"
-            app:expandedTitleGravity="center|left"
+            app:expandedTitleGravity="bottom|left"
             app:toolbarId="@+id/toolbar_common">
 
             <ImageView
@@ -34,7 +34,7 @@
                 app:layout_collapseMode="parallax"
                 android:src="@drawable/create_estate_background" />
 
-            <TextView
+<!--            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -43,7 +43,7 @@
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"
                 android:textSize="24sp"
-                app:layout_collapseMode="parallax"/>
+                app:layout_collapseMode="parallax"/>-->
 
 <!--            <include layout="@layout/toolbar_new_real_estate"
                 android:id="@+id/toolbar_real_estate" />-->

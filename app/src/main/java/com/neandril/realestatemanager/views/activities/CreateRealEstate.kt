@@ -1,10 +1,7 @@
 package com.neandril.realestatemanager.views.activities
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
@@ -12,6 +9,9 @@ import com.neandril.realestatemanager.utils.toSquare
 import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.base.BaseActivity
+import android.view.LayoutInflater
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 
 class CreateRealEstate : BaseActivity() {
 
@@ -24,7 +24,7 @@ class CreateRealEstate : BaseActivity() {
     private lateinit var nbBathRoomsEditText: EditText
     private lateinit var nbBedRoomsEditText: EditText
     private lateinit var nbOtherRoomsEditText: EditText
-
+    private lateinit var btnPhoto: ImageButton
 
     companion object {
         const val EXTRA_REPLY = "com.neandril.realestatemanager.estateListSql.REPLY"
@@ -44,6 +44,9 @@ class CreateRealEstate : BaseActivity() {
         nbBathRoomsEditText = findViewById(R.id.edittext_nb_bathroom)
         nbBedRoomsEditText = findViewById(R.id.edittext_nb_bedroom)
         nbOtherRoomsEditText = findViewById(R.id.edittext_nb_other_rooms)
+        btnPhoto = findViewById(R.id.btn_estate_photo)
+
+        button_photo_click()
 
         val button = findViewById<Button>(R.id.button_continue)
         button.setOnClickListener {
@@ -85,6 +88,23 @@ class CreateRealEstate : BaseActivity() {
         )
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
         spinner.adapter = adapter
+    }
+
+    fun button_photo_click() {
+        btnPhoto.setOnClickListener {
+            val viewGroup = findViewById<ViewGroup>(android.R.id.content)
+
+            val dialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog_photo, viewGroup, false)
+            val builder = AlertDialog.Builder(this)
+
+            //setting the view of the builder to our custom view that we already inflated
+            builder.setView(dialogView)
+
+            //finally creating the alert dialog and displaying it
+            val alertDialog = builder.create()
+            alertDialog.show()
+        }
+
     }
 
 }

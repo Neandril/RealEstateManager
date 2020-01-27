@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="?attr/actionBarSize"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".views.activities.CreateRealEstate"
     tools:showIn="@layout/activity_create_real_estate">
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
@@ -35,7 +37,7 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/button1"
+                        android:id="@+id/btn_estate_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/std_margin"
@@ -259,22 +261,62 @@
                         android:layout_gravity="bottom"
                         android:baselineAligned="false">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <EditText
+                            android:id="@+id/edittext_address"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:layout_margin="@dimen/std_margin">
+                            android:inputType="text"
+                            android:drawableStart="@drawable/ic_place"
+                            android:textAlignment="center"
+                            android:hint="@string/estate_address_hint"
+                            android:importantForAutofill="no" />
 
-                            <EditText
-                                android:id="@+id/edittext_address"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableStart="@drawable/ic_place"
-                                android:textAlignment="center"
-                                android:hint="@string/estate_address_hint"
-                                android:importantForAutofill="no" />
+                    </LinearLayout>
 
-                        </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_description"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:minHeight="120dp"
+                android:layout_margin="@dimen/std_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/std_margin"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/estate_description" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:baselineAligned="false">
+
+                        <EditText
+                            android:id="@+id/edittext_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_description"
+                            android:scrollbars="vertical"
+                            android:inputType="textMultiLine"
+                            android:hint="@string/estate_description_hint"
+                            android:importantForAutofill="no" />
 
                     </LinearLayout>
 

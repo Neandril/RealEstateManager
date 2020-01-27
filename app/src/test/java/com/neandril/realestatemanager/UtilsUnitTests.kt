@@ -19,9 +19,9 @@ class UtilsUnitTests {
         val price2 = "12852098".toThousand()
         val price3 = "35000000".toThousand()
 
-        assertEquals("1 500 000", price)
-        assertEquals("12 852 098", price2)
-        assertEquals("35 000 000", price3)
+        assertEquals("1 500 000", price)
+        assertEquals("12 852 098", price2)
+        assertEquals("35 000 000", price3)
     }
 
 }
