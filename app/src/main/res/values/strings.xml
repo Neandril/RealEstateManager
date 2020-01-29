@@ -7,6 +7,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="agent_name_title">Name of the agent</string>
     <string name="collasping_toolbar_text">Please fill the fields below.\nThis real estate will be added to the database</string>
     <string name="estate_information">GENERAL INFORMATIONS</string>
     <string name="estate_price_hint">Price</string>

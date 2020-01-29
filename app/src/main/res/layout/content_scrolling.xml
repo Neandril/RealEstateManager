@@ -234,12 +234,13 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardview_adress"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/std_margin">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/std_margin"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -259,17 +260,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:baselineAligned="false">
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
 
-                        <EditText
-                            android:id="@+id/edittext_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="text"
-                            android:drawableStart="@drawable/ic_place"
-                            android:textAlignment="center"
-                            android:hint="@string/estate_address_hint"
-                            android:importantForAutofill="no" />
+<!--                    <fragment
+                        android:id="@+id/autocomplete_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                        />-->
+                    <TextView
+                        android:id="@+id/textView_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:drawableStart="@drawable/ic_place"
+                        android:textAlignment="center"
+                        android:hint="@string/estate_address_hint"
+                        android:importantForAutofill="no" />
+
+                    <ImageButton
+                        android:id="@+id/btn_add_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.85"
+                        android:background="@color/transparent"
+                        android:layout_marginStart="@dimen/std_margin"
+                        android:src="@drawable/ic_add_location" />
+
+
 
                     </LinearLayout>
 
