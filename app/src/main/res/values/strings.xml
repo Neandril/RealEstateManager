@@ -19,6 +19,7 @@
     <string name="estate_address">ADDRESS</string>
     <string name="estate_address_hint">Address</string>
     <string name="estate_description">DESCRIPTION</string>
+    <string name="estate_status_title">STATUS</string>
     <string name="estate_description_hint">Enter a complete description</string>
     <string name="button_valid">CONTINUE</string>
     <string name="thumbnail_content_description">Thumbnail</string>
@@ -26,6 +27,7 @@
     <string name="photo_title">Pick a photo</string>
     <string name="photo_camera">From the phone camera</string>
     <string name="photo_gallery">From the phone gallery</string>
+    <string name="checkbox_sold">Is this estate sold ?</string>
 
     <string-array name="estate_type">
         <item>Apartment</item>
