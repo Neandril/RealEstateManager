@@ -18,7 +18,7 @@
     <string name="nb_other_rooms">Other</string>
     <string name="estate_address">ADDRESS</string>
     <string name="estate_address_hint">Address</string>
-    <string name="estate_description">Description</string>
+    <string name="estate_description">DESCRIPTION</string>
     <string name="estate_description_hint">Enter a complete description</string>
     <string name="button_valid">CONTINUE</string>
     <string name="thumbnail_content_description">Thumbnail</string>
