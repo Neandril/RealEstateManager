@@ -58,7 +58,8 @@ class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerV
             nbBathRoomsItemView.text = estate.nbBathrooms
             nbBedRoomsItemView.text = estate.nbBedrooms
             nbOtherRoomsItemView.text = estate.nbOtherRooms
-            agentNameItemView.text = estate.addressLatLng
+            agentNameItemView.text = estate.agentName
+            // agentNameItemView.text = estate.addressLatLng
 
             if (estate.sold) {
                 isSoldItemView.text = itemView.context.getString(R.string.has_been_sold)

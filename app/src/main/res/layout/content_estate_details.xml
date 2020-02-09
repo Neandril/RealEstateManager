@@ -118,12 +118,37 @@
             android:layout_height="match_parent"
             android:layout_margin="@dimen/std_margin"
             app:cameraZoom="13"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/textView_details_agent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView_details_address"
             app:layout_constraintTop_toBottomOf="@id/textView_details_nbBedrooms"
             app:liteMode="true"
             app:mapType="normal" />
+
+        <TextView
+            android:id="@+id/textView_details_agent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/std_margin"
+            android:padding="@dimen/std_padding"
+            android:textSize="@dimen/description_middle"
+            android:drawableStart="@drawable/ic_agent"
+            android:drawablePadding="@dimen/std_padding"
+            app:layout_constraintTop_toBottomOf="@id/textView_details_address"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="AgentName" />
+
+        <TextView
+            android:id="@+id/textView_details_soldDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/std_margin"
+            android:padding="@dimen/std_padding"
+            android:textSize="@dimen/description_middle"
+            app:layout_constraintTop_toBottomOf="@id/textView_details_agent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="SoldDate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

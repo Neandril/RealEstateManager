@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -72,6 +74,10 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     private lateinit var soldDateTextView: TextView
     private lateinit var descriptionEditText: EditText
     private lateinit var imageRecyclerView: RecyclerView
+    private lateinit var cardviewMap: CardView
+
+    private lateinit var preview: ImageView
+    private var mSnapshot: Bitmap? = null
 
     companion object {
         const val AUTOCOMPLETE_REQUEST_CODE = 3010
@@ -95,18 +101,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
 
         Places.initialize(this, apikey)
         placesClient = Places.createClient(this)
-
-        var mMapFragment = supportFragmentManager.findFragmentById(R.id.create_real_estate_map) as SupportMapFragment?
-
-        if (mMapFragment == null) {
-            mMapFragment = SupportMapFragment.newInstance()
-            mMapFragment.getMapAsync(this)
-        }
-
-        // val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        // mapFragment?.let { OnMapAndViewReadyListener(it, this) }
-        // mMapFragment?.getMapAsync(this)
-
 
         this.configureViews()
         this.configureSendButton()
@@ -144,6 +138,9 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         cbStatus = findViewById(R.id.cb_status)
         soldDateTextView = findViewById(R.id.textView_soldDate)
         descriptionEditText = findViewById(R.id.edittext_description)
+        cardviewMap = findViewById(R.id.cardview_map)
+
+        preview = findViewById(R.id.preview)
 
     }
 
@@ -362,15 +359,24 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("OnMapReady", "called")
         mMap = googleMap
-        val brisbane = LatLng(-27.47093, 153.0235)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brisbane, 10f))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
 
-/*        with (map) {
-            uiSettings.isZoomControlsEnabled = false
+        // Whenmap is ready, take a snapshot
+        mMap.setOnMapLoadedCallback {
+            createSnapshot()
+        }
+        createSnapshot()
+    }
 
+    private fun createSnapshot() {
+        val callback: GoogleMap.SnapshotReadyCallback =
+            GoogleMap.SnapshotReadyCallback { snapshot ->
+                // Callback is called from the main thread, so we can modify the ImageView safely.
+                preview.setImageBitmap(snapshot)
+                mSnapshot = snapshot
+            }
 
-            map.addMarker(MarkerOptions().position(brisbane).title("Brisbane"))
-        }*/
+        mMap.snapshot(callback, mSnapshot)
     }
 
     private fun openCamera() {
@@ -414,7 +420,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         val place = Autocomplete.getPlaceFromIntent(data!!)
-
                         val address = place.address
                         latLng = place.latLng
 
@@ -425,7 +430,11 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                         // do query with address
                         addressTextView.text = address
 
-                        Log.d("CreateRealEstate", "address: $strLatLng")
+                        cardviewMap.visibility = View.VISIBLE
+
+                        val mMapFragment = this.supportFragmentManager.findFragmentById(R.id.create_real_estate_map) as SupportMapFragment?
+                        mMapFragment?.getMapAsync(this)
+
                     }
                     AutocompleteActivity.RESULT_ERROR -> {
                         val status = Autocomplete.getStatusFromIntent(data!!)
@@ -440,10 +449,9 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-    override fun onResume() {
+/*    override fun onResume() {
         super.onResume()
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        // mapFragment?.let { OnMapAndViewReadyListener(it, this) }
         mapFragment?.getMapAsync(this)
-    }
+    }*/
 }

@@ -15,6 +15,7 @@ import com.google.android.material.navigation.NavigationView
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.views.base.BaseActivity
 import com.neandril.realestatemanager.views.fragments.FragmentMain
+import com.neandril.realestatemanager.views.fragments.FragmentMap
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -91,7 +92,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_item_one -> Toast.makeText(this, "Item one", Toast.LENGTH_LONG).show()
+            R.id.nav_item_one -> showFragment(FragmentMap()) // Toast.makeText(this, "Item one", Toast.LENGTH_LONG).show()
             R.id.nav_item_two -> Toast.makeText(this, "Item two", Toast.LENGTH_LONG).show()
             R.id.nav_item_three -> Toast.makeText(this, "Item three", Toast.LENGTH_LONG).show()
         }
