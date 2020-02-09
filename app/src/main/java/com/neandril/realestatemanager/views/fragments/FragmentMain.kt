@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
-import com.neandril.realestatemanager.views.MainRecyclerViewAdapter
+import com.neandril.realestatemanager.views.adapters.MainRecyclerViewAdapter
 import com.neandril.realestatemanager.views.base.BaseFragment
 
 class FragmentMain : BaseFragment() {
@@ -28,7 +28,8 @@ class FragmentMain : BaseFragment() {
 
     private fun configureRecyclerView() {
         val recyclerView = activity?.findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = MainRecyclerViewAdapter(activity?.applicationContext!!)
+        val adapter =
+            MainRecyclerViewAdapter(activity?.applicationContext!!)
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
 

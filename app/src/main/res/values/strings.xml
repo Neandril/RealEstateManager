@@ -7,6 +7,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- STRING IN CREATE NEW ESTATE -->
     <string name="agent_name_title">Name of the agent</string>
     <string name="collasping_toolbar_text">Please fill the fields below.\nThis real estate will be added to the database</string>
     <string name="estate_information">GENERAL INFORMATIONS</string>
@@ -26,9 +27,20 @@
     <string name="icon_drop_down_content_description">Drop Down Arrow</string>
     <string name="photo_title">Pick a photo</string>
     <string name="photo_camera">From the phone camera</string>
+    <string name="agent_name">Name of the agent</string>
     <string name="photo_gallery">From the phone gallery</string>
     <string name="checkbox_sold">Is this estate sold ?</string>
+    <string name="sold_date">Sold date</string>
+    <string name="delete_image_content_description">Delete image</string>
+    <string name="sold_date_format">%1$d-%2$d-%3$d</string>
 
+    <!-- DIALOGS STRINGS -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_room_desc_title">Room</string>
+    <string name="dialog_inputs_title">Bad inputs</string>
+    <string name="dialog_verfy_inputs">Please check inputs</string>
+
+    <!-- ARRAYS -->
     <string-array name="estate_type">
         <item>Apartment</item>
         <item>Loft</item>
@@ -36,7 +48,10 @@
         <item>Penthouse</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- ADAPTERS -->
+    <string name="has_been_sold">SOLD</string>
+    <string name="still_available">AVAILABLE</string>
+    
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

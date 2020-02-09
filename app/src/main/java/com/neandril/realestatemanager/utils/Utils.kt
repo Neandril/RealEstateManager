@@ -26,7 +26,7 @@ class Utils {
      * @return
      */
     fun getTodayDate(): String? {
-        val dateFormat: DateFormat = SimpleDateFormat("yyyy/MM/dd")
+        val dateFormat: DateFormat = SimpleDateFormat("yyyy/MM/dd") as DateFormat
         return dateFormat.format(Date())
     }
 

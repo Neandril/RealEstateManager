@@ -15,7 +15,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/std_margin">
+        android:layout_margin="@dimen/std_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,14 +23,12 @@
             android:layout_margin="@dimen/std_margin"
             android:background="@color/colorSecondary"
             android:clipToPadding="false"
-            android:orientation="vertical"
-            tools:layout_editor_absoluteX="-94dp"
-            tools:layout_editor_absoluteY="62dp">
+            android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardview_photo"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="130dp"
                 android:layout_margin="@dimen/std_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,23 +38,23 @@
                     <ImageButton
                         android:id="@+id/btn_estate_photo"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_margin="@dimen/std_margin"
                         android:contentDescription="@string/thumbnail_content_description"
-                        android:scaleType="centerCrop"
+                        android:scaleType="fitCenter"
+                        android:background="@color/transparent"
                         android:src="@drawable/add_image"
                         app:layout_constraintEnd_toStartOf="@+id/recyclerview_images"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_weight="2"/>
+                        app:layout_constraintHorizontal_weight="3"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerview_images"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/std_margin"
-                        android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -230,8 +228,7 @@
                         android:hint="@string/estate_address_hint"
                         android:importantForAutofill="no"
                         android:textAlignment="center"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textView_address_title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/btn_add_address"
                         app:layout_constraintHorizontal_weight="9.5"/>
@@ -243,10 +240,39 @@
                         android:layout_margin="@dimen/std_margin"
                         android:background="@color/transparent"
                         android:src="@drawable/ic_add_location"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/textView_address"
-                        app:layout_constraintHorizontal_weight=".5"/>
+                        app:layout_constraintTop_toBottomOf="@id/textView_address_title"
+                        app:layout_constraintHorizontal_weight=".5"
+                        android:contentDescription="@string/estate_address" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_map"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_margin="@dimen/std_margin">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/create_real_estate_map"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/std_margin"
+                        app:cameraZoom="13"
+                        app:liteMode="false"
+                        app:mapType="normal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -255,7 +281,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardview_status"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="150dp"
                 android:layout_margin="@dimen/std_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -272,6 +298,19 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"  />
 
+                    <EditText
+                        android:id="@+id/agentName_editText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/std_margin"
+                        android:hint="@string/agent_name"
+                        app:layout_constraintBottom_toTopOf="@id/cb_status"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:importantForAutofill="no"
+                        android:inputType="text" />
+
                     <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/cb_status"
                         android:layout_width="0dp"
@@ -280,51 +319,20 @@
                         android:text="@string/checkbox_sold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/textView_date" />
+                        app:layout_constraintEnd_toStartOf="@id/textView_soldDate" />
 
                     <TextView
-                        android:id="@+id/textView_date"
+                        android:id="@+id/textView_soldDate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/std_margin"
-                        android:text="date"
+                        android:text="@string/sold_date"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/cb_status"
-                        app:layout_constraintEnd_toStartOf="@id/btn_datepicker" />
-
-                    <ImageButton
-                        android:id="@+id/btn_datepicker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/std_margin"
-                        android:background="@color/transparent"
-                        android:src="@drawable/ic_datepicker"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/textView_date" />
-
-<!--                    <Spinner
-                        android:id="@+id/spinner_status"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/std_margin"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/date"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintWidth_percent="5"/>
-
-                    <TextView
-                        android:id="@+id/date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/std_margin"
-                        android:text="date"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/spinner_status"
-                        app:layout_constraintWidth_percent="5"/>-->
-
+                        app:layout_constraintStart_toEndOf="@id/cb_status" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

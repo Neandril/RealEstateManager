@@ -4,14 +4,24 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.google.android.gms.maps.model.LatLng
 import com.neandril.realestatemanager.models.Estate
+import com.neandril.realestatemanager.utils.Converters
 import com.neandril.realestatemanager.utils.toSquare
 import com.neandril.realestatemanager.utils.toThousand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import android.icu.lang.UCharacter.GraphemeClusterBreak.V
+import android.icu.lang.UCharacter.GraphemeClusterBreak.V
+
+
+
+
 
 @Database(entities = [Estate::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class RealEstateRoomDatabase : RoomDatabase() {
 
     abstract fun estateDao(): EstateDao
@@ -61,10 +71,40 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
             // Delete all content here.
             estateDao.deleteAll()
 
+            val BRISBANE = LatLng(-27.47093, 153.0235)
+            val MELBOURNE = LatLng(-37.81319, 144.96298)
+
             // Add sample estate.
-            var estate = Estate("This is an address", "Apartment", "120000".toThousand(), "150".toSquare(), "3", "2", "5")
+            var estate = Estate(1,
+                "This is an address",
+                "-27.47093, 153.0235",
+                "Apartment",
+                "120000".toThousand(),
+                "150".toSquare(),
+                "3",
+                "2",
+                "5",
+                "Agent1",
+                true,
+                "2020-02-02",
+                "",
+                null)
             estateDao.insert(estate)
-            estate = Estate("And an another address", "Manor", "3585000".toThousand(), "1125".toSquare(), "7", "5", "8")
+
+            estate = Estate(2,
+                "And an another address",
+                "-37.81319, 144.96298",
+                "Manor",
+                "3585000".toThousand(),
+                "1125".toSquare(),
+                "7",
+                "5",
+                "8",
+                "Agent2",
+                false,
+                "",
+                "",
+                null)
             estateDao.insert(estate)
         }
     }

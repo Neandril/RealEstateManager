@@ -10,7 +10,7 @@ import com.neandril.realestatemanager.models.Estate
 @Dao
 interface EstateDao {
 
-    @Query("SELECT * from real_estate_table ORDER BY address ASC")
+    @Query("SELECT * from real_estate_table ORDER BY id ASC")
     fun getAlphabetized(): LiveData<List<Estate>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

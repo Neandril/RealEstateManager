@@ -26,19 +26,25 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/from_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/std_margin"
             android:drawableStart="@drawable/ic_photo_camera"
             android:textAlignment="center"
+            android:clickable="true"
+            android:focusable="true"
             android:text="@string/photo_camera" />
 
         <TextView
+            android:id="@+id/from_gallery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/std_margin"
             android:drawableStart="@drawable/ic_photo_gallery"
             android:textAlignment="center"
+            android:clickable="true"
+            android:focusable="true"
             android:text="@string/photo_gallery" />
 
     </LinearLayout>

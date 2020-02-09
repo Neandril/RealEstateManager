@@ -1,18 +1,24 @@
 package com.neandril.realestatemanager.models
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.google.android.gms.maps.model.LatLng
 
 @Entity(tableName = "real_estate_table")
 data class Estate (
-    @PrimaryKey @ColumnInfo(name = "address") val address: String,
-    @ColumnInfo(name = "type") val type: String,
-    @ColumnInfo(name = "price") val price: String,
-    @ColumnInfo(name = "surface") val surface: String,
-    @ColumnInfo(name = "nb_bathrooms") val nbBathrooms: String,
-    @ColumnInfo(name = "nb_bedrooms") val nbBedrooms: String,
-    @ColumnInfo(name = "nb_other_rooms") val nbOtherRooms: String
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    val address: String,
+    val addressLatLng: String,
+    val type: String,
+    val price: String,
+    val surface: String,
+    val nbBathrooms: String,
+    val nbBedrooms: String,
+    val nbOtherRooms: String,
+    val agentName: String,
+    val sold: Boolean,
+    val soldDate: String,
+    val description: String,
+    val estatePhotos: List<Thumbnail>?
 ) {
     var isExpanded = false
 }
