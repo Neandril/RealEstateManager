@@ -1,7 +1,9 @@
 package com.neandril.realestatemanager.models
 
+import android.graphics.Bitmap
 import androidx.room.*
 import com.google.android.gms.maps.model.LatLng
+import java.io.Serializable
 
 @Entity(tableName = "real_estate_table")
 data class Estate (
@@ -18,7 +20,8 @@ data class Estate (
     val sold: Boolean,
     val soldDate: String,
     val description: String,
-    val estatePhotos: List<Thumbnail>?
-) {
+    val estatePhotos: List<Thumbnail>?,
+    val addressThumbnail: Bitmap?
+) : Serializable {
     var isExpanded = false
 }

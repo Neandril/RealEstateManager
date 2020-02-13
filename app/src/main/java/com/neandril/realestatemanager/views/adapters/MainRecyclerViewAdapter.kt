@@ -1,6 +1,7 @@
 package com.neandril.realestatemanager.views.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,8 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
+import com.neandril.realestatemanager.views.activities.EstateDetailsActivity
+import java.io.Serializable
 
 class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerView.Adapter<MainRecyclerViewAdapter.EstateViewHolder>() {
 
@@ -89,7 +92,11 @@ class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerV
         // Handle click on RecyclerView Item
         holder.itemView.setOnClickListener {
             Log.d("onClick", "item clicked: " + current.id)
-
+            val context = holder.itemView.context
+            val intent = Intent(context, EstateDetailsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.putExtra("id_estate", current.id)
+            context.startActivity(intent)
         }
 
         // Handle click on RecyclerView Arrow Button

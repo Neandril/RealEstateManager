@@ -76,7 +76,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     private lateinit var imageRecyclerView: RecyclerView
     private lateinit var cardviewMap: CardView
 
-    private lateinit var preview: ImageView
     private var mSnapshot: Bitmap? = null
 
     companion object {
@@ -140,8 +139,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         descriptionEditText = findViewById(R.id.edittext_description)
         cardviewMap = findViewById(R.id.cardview_map)
 
-        preview = findViewById(R.id.preview)
-
     }
 
     private fun checkInputs(): Boolean {
@@ -175,7 +172,8 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                     cbStatus.isChecked,
                     soldDateTextView.text.toString(),
                     descriptionEditText.text.toString(),
-                    imgList
+                    imgList,
+                    mSnapshot
                 )
 
                 estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
@@ -361,7 +359,10 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         mMap = googleMap
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
 
-        // Whenmap is ready, take a snapshot
+        val markerOptions = latLng?.let { MarkerOptions().position(it) }
+        mMap.addMarker(markerOptions)
+
+        // When map is ready, take a snapshot
         mMap.setOnMapLoadedCallback {
             createSnapshot()
         }
@@ -372,7 +373,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         val callback: GoogleMap.SnapshotReadyCallback =
             GoogleMap.SnapshotReadyCallback { snapshot ->
                 // Callback is called from the main thread, so we can modify the ImageView safely.
-                preview.setImageBitmap(snapshot)
                 mSnapshot = snapshot
             }
 

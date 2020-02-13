@@ -69,7 +69,7 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(estateDao: EstateDao) {
             // Delete all content here.
-            estateDao.deleteAll()
+            // estateDao.deleteAll()
 
             val BRISBANE = LatLng(-27.47093, 153.0235)
             val MELBOURNE = LatLng(-37.81319, 144.96298)
@@ -88,6 +88,7 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
                 true,
                 "2020-02-02",
                 "",
+                null,
                 null)
             estateDao.insert(estate)
 
@@ -104,6 +105,7 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
                 false,
                 "",
                 "",
+                null,
                 null)
             estateDao.insert(estate)
         }

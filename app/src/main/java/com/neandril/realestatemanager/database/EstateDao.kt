@@ -11,7 +11,10 @@ import com.neandril.realestatemanager.models.Estate
 interface EstateDao {
 
     @Query("SELECT * from real_estate_table ORDER BY id ASC")
-    fun getAlphabetized(): LiveData<List<Estate>>
+    fun getAllEstates(): LiveData<List<Estate>>
+
+    @Query("SELECT * FROM real_estate_table WHERE id=:id")
+    fun getSingleEstate(id: Int): LiveData<Estate>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(estate: Estate)
