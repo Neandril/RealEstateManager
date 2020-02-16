@@ -26,4 +26,8 @@ class EstateViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun getSingleEstate(id: Int) = repository.getSingleEstate(id)
+
+    fun updateEstate(estate: Estate) = viewModelScope.launch {
+        repository.updateEstate(estate)
+    }
 }

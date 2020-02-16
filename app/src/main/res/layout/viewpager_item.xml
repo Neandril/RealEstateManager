@@ -26,6 +26,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/item_image_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_grey"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="@id/item_image"
+                app:layout_constraintStart_toStartOf="@id/item_image"
+                app:layout_constraintEnd_toEndOf="@id/item_image"
+                tools:text="TEXT" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

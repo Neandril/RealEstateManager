@@ -7,7 +7,7 @@ import java.io.Serializable
 
 @Entity(tableName = "real_estate_table")
 data class Estate (
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Int,
     val address: String,
     val addressLatLng: String,
     val type: String,

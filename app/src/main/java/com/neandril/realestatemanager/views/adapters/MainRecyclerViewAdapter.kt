@@ -15,6 +15,8 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
+import com.neandril.realestatemanager.utils.toSquare
+import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.views.activities.EstateDetailsActivity
 import java.io.Serializable
 
@@ -54,10 +56,13 @@ class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerV
                 thumbnail.layoutParams.width = 200
             }
 
+            val price = estate.price.toThousand()
+            val surface = estate.surface.toSquare()
+
             // Fill the fields
             typeItemView.text = estate.type
-            priceItemView.text = estate.price
-            surfaceItemView.text = estate.surface
+            priceItemView.text = price
+            surfaceItemView.text = surface
             nbBathRoomsItemView.text = estate.nbBathrooms
             nbBedRoomsItemView.text = estate.nbBedrooms
             nbOtherRoomsItemView.text = estate.nbOtherRooms

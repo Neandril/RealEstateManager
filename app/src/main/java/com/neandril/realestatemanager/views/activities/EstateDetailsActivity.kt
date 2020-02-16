@@ -1,7 +1,9 @@
 package com.neandril.realestatemanager.views.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -11,8 +13,12 @@ import com.neandril.realestatemanager.views.fragments.FragmentEstateDetails
 
 class EstateDetailsActivity : BaseActivity() {
 
+    private val newEstateActivityRequestCode = 1
+
     private lateinit var toolbar: Toolbar
-    private lateinit var text1: TextView
+
+    private var estateId: Int? = null
+
 
     // ***************************
     // BASE METHODS
@@ -38,15 +44,29 @@ class EstateDetailsActivity : BaseActivity() {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_edit -> launchCreateNewEstateActivity()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun showFragment(fragment: Fragment) {
         // Retrieve estate
-        val estateId = intent.getIntExtra("id_estate",0)
+        estateId = intent.getIntExtra("id_estate",0)
         val fragmentManager = supportFragmentManager
         val bundle = Bundle()
-        bundle.putInt("id_estate", estateId)
+        bundle.putInt("id_estate", estateId!!)
         fragment.arguments = bundle
         fragmentManager.beginTransaction()
             .replace(R.id.estate_details_content_frame, fragment)
             .commit()
+    }
+
+    private fun launchCreateNewEstateActivity() {
+        val intent = Intent(this, CreateRealEstate::class.java)
+        intent.putExtra("estateId", estateId)
+        startActivity(intent)
+        // startActivityForResult(intent, newEstateActivityRequestCode)
     }
 }

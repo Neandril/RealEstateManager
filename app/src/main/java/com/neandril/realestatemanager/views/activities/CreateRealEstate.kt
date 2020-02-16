@@ -21,6 +21,7 @@ import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -58,6 +59,7 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     private var latLng: LatLng? = null
     private var imgList: MutableList<Thumbnail> = mutableListOf()
     private var imageUri: Uri? = null
+    private var estateId: Int = 0
 
     private lateinit var sendButton: Button
     private lateinit var spinner: Spinner
@@ -100,6 +102,11 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
 
         Places.initialize(this, apikey)
         placesClient = Places.createClient(this)
+
+        estateId = intent.getIntExtra("estateId", 0)
+        Log.d("EditEstate", "estateId: $estateId")
+
+        if (estateId != 0) { editEstate(estateId!!) }
 
         this.configureViews()
         this.configureSendButton()
@@ -159,12 +166,12 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                 Log.d("CheckInput", "Form filled correctly")
 
                 val estate = Estate(
-                    0,
+                    estateId,
                     addressTextView.text.toString(),
                     strLatLng,
                     spinner.selectedItem.toString(),
-                    priceEditText.text.toString().toThousand(),
-                    surfaceEditText.text.toString().toSquare(),
+                    priceEditText.text.toString(),
+                    surfaceEditText.text.toString(),
                     nbBathRoomsEditText.text.toString(),
                     nbBedRoomsEditText.text.toString(),
                     nbOtherRoomsEditText.text.toString(),
@@ -176,8 +183,21 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                     mSnapshot
                 )
 
-                estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-                estateViewModel.insert(estate)
+/*                estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
+                estateViewModel.insert(estate)*/
+
+                if (estateId == 0) {
+                    Log.d("CreateOrEdit", "To Create")
+                    estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
+                    estateViewModel.insert(estate)
+                } else {
+                    Log.d("CreateOrEdit", "To Edit")
+                    estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
+                    estateViewModel.updateEstate(estate)
+                }
+
+                Log.d("CreateOrEdit", "id: $estateId")
+
                 finish()
 
             } else {
@@ -190,6 +210,50 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                 builder.show()
             }
         }
+    }
+
+    private fun editEstate(estateId: Int) {
+        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
+        estateViewModel.getSingleEstate(estateId).observe(this, Observer { id ->
+            priceEditText.setText(id.price)
+            surfaceEditText.setText(id.surface)
+            nbBathRoomsEditText.setText(id.nbBathrooms)
+            nbBedRoomsEditText.setText(id.nbBedrooms)
+            nbOtherRoomsEditText.setText(id.nbOtherRooms)
+            addressTextView.text = id.address
+            descriptionEditText.setText(id.description)
+            strLatLng = id.addressLatLng
+
+            cardviewMap.visibility = View.VISIBLE
+
+            agentNameEditText.setText(id.agentName)
+            cbStatus.isChecked = id.sold
+            soldDateTextView.text = id.soldDate
+
+            val sLatLng = id.addressLatLng.split(",")
+
+            if (sLatLng.isNotEmpty()) {
+                val lat: Double = sLatLng[0].toDouble()
+                val lng: Double = sLatLng[1].toDouble()
+
+                latLng = LatLng(lat, lng)
+            }
+
+            val mMapFragment = this.supportFragmentManager.findFragmentById(R.id.create_real_estate_map) as SupportMapFragment?
+            mMapFragment?.getMapAsync(this)
+
+            id.estatePhotos?.forEach {
+                imgList.add(it)
+            }
+
+            imageRecyclerView = findViewById(R.id.recyclerview_images)
+
+            val adapter = ImagesRecyclerViewAdapter(this)
+            imageRecyclerView.adapter = adapter
+            imageRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+            adapter.setThumbnail(imgList)
+
+        })
     }
 
     // ***************************
@@ -334,6 +398,7 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                 this.configureDatePicker()
             } else {
                 soldDateTextView.visibility = View.INVISIBLE
+                soldDateTextView.text = null
             }
         }
     }
@@ -341,7 +406,7 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     private fun configureDatePicker() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
+        val month = calendar.get(Calendar.MONTH) + 1
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         soldDateTextView.setOnClickListener {

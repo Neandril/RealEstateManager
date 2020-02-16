@@ -327,7 +327,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/std_margin"
-                        android:text="@string/sold_date"
+                        android:hint="@string/sold_date"
                         android:clickable="true"
                         android:focusable="true"
                         android:visibility="invisible"

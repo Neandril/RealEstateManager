@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.viewpager.widget.PagerAdapter
 import com.neandril.realestatemanager.R
@@ -19,8 +21,28 @@ class DotIndicatorPagerAdapter(thumbnail: List<Thumbnail>?) : PagerAdapter() {
             R.layout.viewpager_item, container,
             false)
         val imageView = item.findViewById(R.id.item_image) as ImageView
+        val imageOverlay: TextView = item.findViewById(R.id.item_image_overlay)
 
         imageView.setImageURI(imgList?.get(position)?.image?.toUri())
+        imageOverlay.text = imgList?.get(position)?.description
+
+        item.setOnClickListener {
+            Log.d("ViewPager", "clicked: " + imgList?.get(position)?.description)
+            val viewGroup = item.findViewById<ViewGroup>(android.R.id.content)
+
+            val dialogView = LayoutInflater.from(item.context).inflate(R.layout.custom_dialog_pic_viewer, viewGroup, false)
+            val builder = AlertDialog.Builder(item.context)
+
+            //setting the view of the builder to our custom view that we already inflated
+            builder.setView(dialogView)
+
+            //finally creating the alert dialog and displaying it
+            val alertDialog = builder.create()
+            alertDialog.show()
+
+            val picViewer = dialogView.findViewById<ImageView>(R.id.pic_viewer)
+            picViewer.setImageURI(imgList?.get(position)?.image?.toUri())
+        }
 
         container.addView(item)
 

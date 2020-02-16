@@ -62,12 +62,12 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
             super.onOpen(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.estateDao())
+                    // populateDatabase(database.estateDao())
                 }
             }
         }
 
-        suspend fun populateDatabase(estateDao: EstateDao) {
+        /*suspend fun populateDatabase(estateDao: EstateDao) {
             // Delete all content here.
             // estateDao.deleteAll()
 
@@ -108,6 +108,6 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
                 null,
                 null)
             estateDao.insert(estate)
-        }
+        }*/
     }
 }

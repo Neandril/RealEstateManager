@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_grey"
     tools:context=".views.fragments.FragmentEstateDetails">
 
     <androidx.core.widget.NestedScrollView
@@ -151,7 +150,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/map_thumbnail"
-                tools:text="New Jersey Turnpike\nKearny\nNJ\nEtats-Unis" />
+                tools:text="New Jersey - Turnpike - Kearny - NJ - Etats-Unis" />
 
             <ImageView
                 android:id="@+id/map_thumbnail"

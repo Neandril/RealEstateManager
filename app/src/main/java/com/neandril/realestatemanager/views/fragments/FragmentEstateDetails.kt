@@ -9,6 +9,8 @@ import androidx.viewpager.widget.ViewPager
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.models.Thumbnail
+import com.neandril.realestatemanager.utils.toSquare
+import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.adapters.DotIndicatorPagerAdapter
 import com.neandril.realestatemanager.views.adapters.ZoomOutPageTransformer
@@ -69,16 +71,15 @@ class FragmentEstateDetails : BaseFragment() {
     private fun displayDetails(estate: Estate) {
         // Split address after commas, and display it in a multilined style inside the textview
         val items = estate.address.split(", ")
-        items.forEach {
-            addressTextView?.append(getString(R.string.splitted_address, it))
+        addressTextView?.text = estate.address.replace(", ", "• ")
 
-        }
+
         // Display the type, and city
         typeTextView?.text = getString(R.string.type_and_city, estate.type, items[1])
 
         // Fill all others textviews
-        priceTextView?.text = estate.price
-        surfaceTextView?.text = estate.surface
+        priceTextView?.text = estate.price.toThousand()
+        surfaceTextView?.text = estate.surface.toSquare()
         nbBathRoomsTextView?.text = estate.nbBathrooms
         nbBedRoomsTextView?.text = estate.nbBedrooms
         nbOtherRoomsTextView?.text = estate.nbOtherRooms
@@ -106,15 +107,13 @@ class FragmentEstateDetails : BaseFragment() {
             estate.sold -> {
                 statusTextView?.text = getString(R.string.has_been_sold)
                 statusTextView?.setTextColor(Color.RED)
+                soldDateTextView?.text = estate.soldDate
             }
             else -> {
                 statusTextView?.text = getString(R.string.still_available)
                 statusTextView?.setTextColor(Color.GREEN)
+                soldDateTextView?.text = estate.soldDate
             }
-        }
-
-        when {
-            estate.soldDate.isEmpty() -> soldDateTextView?.text = estate.soldDate
         }
     }
 }
