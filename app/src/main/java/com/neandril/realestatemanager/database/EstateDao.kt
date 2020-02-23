@@ -21,4 +21,7 @@ interface EstateDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateEstate(estate: Estate)
+
+/*    @Query("SELECT * FROM real_estate_table WHERE price = (SELECT MAX(price) FROM real_estate_table)")
+    fun getMaxPrice(): Int*/
 }

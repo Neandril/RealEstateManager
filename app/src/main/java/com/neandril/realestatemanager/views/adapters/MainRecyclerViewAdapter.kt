@@ -56,7 +56,7 @@ class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerV
                 thumbnail.layoutParams.width = 200
             }
 
-            val price = estate.price.toThousand()
+            val price = estate.price.toString().toThousand()
             val surface = estate.surface.toSquare()
 
             // Fill the fields
@@ -67,7 +67,6 @@ class MainRecyclerViewAdapter internal constructor(context: Context) : RecyclerV
             nbBedRoomsItemView.text = estate.nbBedrooms
             nbOtherRoomsItemView.text = estate.nbOtherRooms
             agentNameItemView.text = estate.agentName
-            // agentNameItemView.text = estate.addressLatLng
 
             if (estate.sold) {
                 isSoldItemView.text = itemView.context.getString(R.string.has_been_sold)

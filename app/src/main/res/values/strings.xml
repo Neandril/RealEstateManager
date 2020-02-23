@@ -34,6 +34,19 @@
     <string name="sold_date_format">%1$d-%2$d-%3$d</string>
     <string name="type_and_city">%1$s • %2$s</string>
     <string name="no_description">This real estate has not any description yet.</string>
+    <string name="poi_title">Points of interest</string>
+    <string name="details_pois">Proximity: %1$s</string>
+
+    <!-- FILTER STRINGS -->
+    <string name="filter_title">FILTER</string>
+    <string name="filter_price">Price</string>
+    <string name="filter_surface">Surface</string>
+    <string name="filter_room">Number of minimum rooms</string>
+    <string name="filter_photos">Number of minimum photos</string>
+    <string name="filter_type">Type of the estate</string>
+    <string name="filter_points_of_interest">Points of interest</string>
+    <string name="filter_locality">Location (city, state or province)</string>
+    <string name="filter_sold">SOLD ?</string>
 
     <!-- DIALOGS STRINGS -->
     <string name="dialog_ok">OK</string>
@@ -43,10 +56,24 @@
 
     <!-- ARRAYS -->
     <string-array name="estate_type">
+        <item>Flat</item>
         <item>Apartment</item>
         <item>Loft</item>
         <item>Manor</item>
         <item>Penthouse</item>
+    </string-array>
+
+    <string-array name="point_of_interest">
+        <item>School</item>
+        <item>High school</item>
+        <item>Park</item>
+        <item>Restaurant</item>
+        <item>Public transport</item>
+        <item>Beach</item>
+        <item>Zoo</item>
+        <item>Downtown</item>
+        <item>Marina</item>
+        <item>Nightclub</item>
     </string-array>
 
     <!-- ADAPTERS -->

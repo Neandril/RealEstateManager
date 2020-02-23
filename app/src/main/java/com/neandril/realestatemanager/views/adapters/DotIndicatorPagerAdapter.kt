@@ -20,7 +20,7 @@ class DotIndicatorPagerAdapter(thumbnail: List<Thumbnail>?) : PagerAdapter() {
         val item = LayoutInflater.from(container.context).inflate(
             R.layout.viewpager_item, container,
             false)
-        val imageView = item.findViewById(R.id.item_image) as ImageView
+        val imageView: ImageView = item.findViewById(R.id.item_image)
         val imageOverlay: TextView = item.findViewById(R.id.item_image_overlay)
 
         imageView.setImageURI(imgList?.get(position)?.image?.toUri())

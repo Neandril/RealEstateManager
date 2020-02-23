@@ -34,6 +34,7 @@ class FragmentEstateDetails : BaseFragment() {
     private var viewpager: ViewPager? = null
     private var dotsIndicator: DotsIndicator? = null
     private var imgList: List<Thumbnail>? = listOf()
+    private var poisTextView: TextView? = null
 
     private lateinit var estateViewModel: EstateViewModel
 
@@ -63,6 +64,7 @@ class FragmentEstateDetails : BaseFragment() {
         agentNameTextView = activity?.findViewById(R.id.textView_details_agent)
         soldDateTextView = activity?.findViewById(R.id.textView_details_soldDate)
         statusTextView = activity?.findViewById(R.id.textView_details_status)
+        poisTextView = activity?.findViewById(R.id.textView_details_points_of_interest)
         mapThumbnail = activity?.findViewById(R.id.map_thumbnail)
         viewpager = activity?.findViewById(R.id.view_pager)
         dotsIndicator = activity?.findViewById(R.id.dots_indicator)
@@ -78,13 +80,14 @@ class FragmentEstateDetails : BaseFragment() {
         typeTextView?.text = getString(R.string.type_and_city, estate.type, items[1])
 
         // Fill all others textviews
-        priceTextView?.text = estate.price.toThousand()
+        priceTextView?.text = estate.price.toString().toThousand()
         surfaceTextView?.text = estate.surface.toSquare()
         nbBathRoomsTextView?.text = estate.nbBathrooms
         nbBedRoomsTextView?.text = estate.nbBedrooms
         nbOtherRoomsTextView?.text = estate.nbOtherRooms
         agentNameTextView?.text = estate.agentName
         imgList = estate.estatePhotos
+        poisTextView?.text = getString(R.string.details_pois, estate.points_of_interest)
 
         // Get the map thumbnail
         mapThumbnail?.setImageBitmap(estate.addressThumbnail)

@@ -17,9 +17,6 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 
 
-
-
-
 @Database(entities = [Estate::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class RealEstateRoomDatabase : RoomDatabase() {

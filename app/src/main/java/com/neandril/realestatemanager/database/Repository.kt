@@ -16,4 +16,6 @@ class Repository(private val estateDao: EstateDao) {
     suspend fun updateEstate(estate: Estate) {
         estateDao.updateEstate(estate)
     }
+
+    //fun getMaxPrice(): Int = estateDao.getMaxPrice()
 }

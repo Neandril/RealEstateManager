@@ -11,7 +11,7 @@ data class Estate (
     val address: String,
     val addressLatLng: String,
     val type: String,
-    val price: String,
+    val price: Int,
     val surface: String,
     val nbBathrooms: String,
     val nbBedrooms: String,
@@ -21,7 +21,8 @@ data class Estate (
     val soldDate: String,
     val description: String,
     val estatePhotos: List<Thumbnail>?,
-    val addressThumbnail: Bitmap?
+    val addressThumbnail: Bitmap?,
+    val points_of_interest: String?
 ) : Serializable {
     var isExpanded = false
 }

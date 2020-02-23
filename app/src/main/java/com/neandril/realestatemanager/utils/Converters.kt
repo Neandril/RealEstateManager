@@ -68,4 +68,33 @@ class Converters {
             null
         }
     }
+
+    /**
+     * Convert a list of strings to string value
+     */
+    @TypeConverter
+    fun fromListOfStrings(list: List<String>?): String? {
+        if (list == null) {
+            return null
+        }
+        val type = object : TypeToken<List<String>>() {
+
+        }.type
+        return gson.toJson(list, type)
+    }
+
+    /**
+     * Convert string to list of strings
+     */
+    @TypeConverter
+    fun toListOfStrings(list: String?): List<String>? {
+        if (list == null) {
+            return null
+        }
+        val type = object : TypeToken<List<String>>() {
+
+        }.type
+        return gson.fromJson(list, type)
+    }
+
 }

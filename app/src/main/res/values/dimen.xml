@@ -9,5 +9,6 @@
     <dimen name="font_size_large">24sp</dimen>
     <dimen name="font_size_mid">21sp</dimen>
     <dimen name="font_size_small">18sp</dimen>
+    <dimen name="font_size_edittext_small">14sp</dimen>
 
 </resources>

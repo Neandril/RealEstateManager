@@ -30,4 +30,10 @@ class EstateViewModel(application: Application) : AndroidViewModel(application) 
     fun updateEstate(estate: Estate) = viewModelScope.launch {
         repository.updateEstate(estate)
     }
+
+/*    fun getMaxPrice() = viewModelScope.launch {
+        repository.getMaxPrice()
+    }*/
+
+    /*fun getMaxPrice() = repository.getMaxPrice()*/
 }

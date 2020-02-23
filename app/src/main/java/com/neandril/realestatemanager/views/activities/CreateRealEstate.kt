@@ -18,10 +18,10 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
@@ -39,20 +38,17 @@ import com.neandril.realestatemanager.BuildConfig
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.models.Thumbnail
-import com.neandril.realestatemanager.utils.toSquare
-import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.adapters.ImagesRecyclerViewAdapter
 import com.neandril.realestatemanager.views.base.BaseActivity
 import java.util.*
-// OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener
+
 class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
 
     private var apikey: String = BuildConfig.ApiKey
-    private lateinit var placesClient: PlacesClient
-
     private lateinit var estateViewModel: EstateViewModel
 
+    // Variables
     private var image: Thumbnail = Thumbnail("","")
     private var imageDescription: String = ""
     private var strLatLng: String = ""
@@ -60,7 +56,13 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     private var imgList: MutableList<Thumbnail> = mutableListOf()
     private var imageUri: Uri? = null
     private var estateId: Int = 0
+    private var mSnapshot: Bitmap? = null
 
+    private  lateinit var listItems:Array<String>
+    private lateinit var checkedItems: BooleanArray
+    private var mUserItem = arrayListOf<Int>()
+
+    // Ui elements
     private lateinit var sendButton: Button
     private lateinit var spinner: Spinner
     private lateinit var addressTextView: TextView
@@ -77,8 +79,8 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     private lateinit var descriptionEditText: EditText
     private lateinit var imageRecyclerView: RecyclerView
     private lateinit var cardviewMap: CardView
-
-    private var mSnapshot: Bitmap? = null
+    private lateinit var mMap: GoogleMap
+    private lateinit var poisTextView: TextView
 
     companion object {
         const val AUTOCOMPLETE_REQUEST_CODE = 3010
@@ -86,8 +88,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         const val GALLERY = 100
         const val CAMERA = 101
     }
-
-    private lateinit var mMap: GoogleMap
 
     // ***************************
     // BASE METHODS
@@ -100,13 +100,12 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Initialize map api
         Places.initialize(this, apikey)
-        placesClient = Places.createClient(this)
 
+        // Get the estateId from previous activity
         estateId = intent.getIntExtra("estateId", 0)
-        Log.d("EditEstate", "estateId: $estateId")
-
-        if (estateId != 0) { editEstate(estateId!!) }
+        if (estateId != 0) { editEstate(estateId) }
 
         this.configureViews()
         this.configureSendButton()
@@ -114,6 +113,13 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         this.configureSoldDate()
         this.buttonPhotoClick()
         this.buttonAddAddressClick()
+
+        listItems = resources.getStringArray(R.array.point_of_interest)
+        checkedItems = BooleanArray(listItems.size)
+
+        poisTextView.setOnClickListener {
+            showPoiDialog()
+        }
     }
 
     // ***************************
@@ -145,7 +151,7 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         soldDateTextView = findViewById(R.id.textView_soldDate)
         descriptionEditText = findViewById(R.id.edittext_description)
         cardviewMap = findViewById(R.id.cardview_map)
-
+        poisTextView = findViewById(R.id.textview_pois)
     }
 
     private fun checkInputs(): Boolean {
@@ -159,18 +165,19 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                 descriptionEditText.text.isEmpty())
     }
 
-    private fun configureSendButton() {
+    // ***************************
+    // ACTIONS
+    // ***************************
 
+    private fun configureSendButton() {
         sendButton.setOnClickListener {
             if (checkInputs()) {
-                Log.d("CheckInput", "Form filled correctly")
-
                 val estate = Estate(
                     estateId,
                     addressTextView.text.toString(),
                     strLatLng,
                     spinner.selectedItem.toString(),
-                    priceEditText.text.toString(),
+                    priceEditText.text.toString().toInt(),
                     surfaceEditText.text.toString(),
                     nbBathRoomsEditText.text.toString(),
                     nbBedRoomsEditText.text.toString(),
@@ -180,29 +187,21 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                     soldDateTextView.text.toString(),
                     descriptionEditText.text.toString(),
                     imgList,
-                    mSnapshot
+                    mSnapshot,
+                    poisTextView.text.toString()
                 )
 
-/*                estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-                estateViewModel.insert(estate)*/
-
+                // If estateId == 0, create new one
                 if (estateId == 0) {
-                    Log.d("CreateOrEdit", "To Create")
                     estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
                     estateViewModel.insert(estate)
-                } else {
-                    Log.d("CreateOrEdit", "To Edit")
+                } else { // Else, update current estate
                     estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
                     estateViewModel.updateEstate(estate)
                 }
 
-                Log.d("CreateOrEdit", "id: $estateId")
-
                 finish()
-
             } else {
-                Log.d("CheckInput", "Form not filled correctly")
-
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle(R.string.dialog_inputs_title)
                 builder.setMessage(R.string.dialog_verfy_inputs)
@@ -215,7 +214,7 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     private fun editEstate(estateId: Int) {
         estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
         estateViewModel.getSingleEstate(estateId).observe(this, Observer { id ->
-            priceEditText.setText(id.price)
+            priceEditText.setText(id.price.toString())
             surfaceEditText.setText(id.surface)
             nbBathRoomsEditText.setText(id.nbBathrooms)
             nbBedRoomsEditText.setText(id.nbBedrooms)
@@ -223,19 +222,17 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
             addressTextView.text = id.address
             descriptionEditText.setText(id.description)
             strLatLng = id.addressLatLng
-
             cardviewMap.visibility = View.VISIBLE
-
             agentNameEditText.setText(id.agentName)
             cbStatus.isChecked = id.sold
             soldDateTextView.text = id.soldDate
+            poisTextView.text = id.points_of_interest
 
+            // Convert srting to lat lng
             val sLatLng = id.addressLatLng.split(",")
-
             if (sLatLng.isNotEmpty()) {
                 val lat: Double = sLatLng[0].toDouble()
                 val lng: Double = sLatLng[1].toDouble()
-
                 latLng = LatLng(lat, lng)
             }
 
@@ -252,59 +249,8 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
             imageRecyclerView.adapter = adapter
             imageRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
             adapter.setThumbnail(imgList)
-
         })
     }
-
-    // ***************************
-    // PERMISSIONS
-    // ***************************
-
-    private fun checkPermissionsExternalStorage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED){
-                // Permission denied
-                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                // Show popup to request runtime permission
-                requestPermissions(permissions, PERMISSION_CODE)
-            }
-            else{
-                // Permission already granted
-                pickImageFromGallery()
-            }
-        }
-        else{
-            // System OS is < Marshmallow
-            pickImageFromGallery()
-        }
-    }
-
-    private fun checkPermissionsCamera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkSelfPermission(Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_DENIED ||
-                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_DENIED){
-                //permission was not enabled
-                val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                //show popup to request permission
-                requestPermissions(permission, PERMISSION_CODE)
-            }
-            else{
-                //permission already granted
-                openCamera()
-            }
-        }
-        else{
-            //system os is < marshmallow
-            openCamera()
-        }
-    }
-
-    // ***************************
-    // ACTIONS
-    // ***************************
 
     private fun buttonAddAddressClick() {
         btnAddAddress.setOnClickListener {
@@ -340,14 +286,12 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
 
             val fromGallery = dialogView.findViewById<TextView>(R.id.from_gallery)
             fromGallery.setOnClickListener {
-                Log.d("FromDialog", "From gallery clicked")
                 checkPermissionsExternalStorage()
                 alertDialog.dismiss()
             }
 
             val fromCamera = dialogView.findViewById<TextView>(R.id.from_camera)
             fromCamera.setOnClickListener {
-                Log.d("FromDialog", "From camera clicked")
                 checkPermissionsCamera()
                 alertDialog.dismiss()
             }
@@ -366,9 +310,9 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         builder.setPositiveButton(R.string.dialog_ok)
         { _, _ ->
             imageDescription = descriptionEditText.text.toString()
+
             image = Thumbnail(path, imageDescription)
             imgList.add(image)
-            Log.d("CreateRealEstate", "Room: " + image.image + " , " + image.description)
 
             imageRecyclerView = findViewById(R.id.recyclerview_images)
 
@@ -376,12 +320,38 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
             imageRecyclerView.adapter = adapter
             imageRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
             adapter.setThumbnail(imgList)
-
-            Log.d("List", "imagelist: $imgList")
-
         }
 
         builder.show()
+    }
+
+    private fun showPoiDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.poi_title)
+
+        builder.setMultiChoiceItems(listItems, checkedItems
+        ) { _, position, isChecked ->
+            if (isChecked) {
+                mUserItem.add(position)
+            } else {
+                mUserItem.remove((Integer.valueOf(position)))
+            }
+        }
+        builder.setCancelable(false)
+        builder.setPositiveButton(R.string.dialog_ok
+        ) { _, _ ->
+            var item = ""
+            for (i in 0 until mUserItem.size) {
+                item += listItems[mUserItem[i]]
+                if (i != mUserItem.size - 1) {
+                    item = "$item, "
+                }
+            }
+            poisTextView.text = item
+        }
+
+        val mDialog = builder.create()
+        mDialog.show()
     }
 
     private fun pickImageFromGallery() {
@@ -456,6 +426,52 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     }
 
     // ***************************
+    // PERMISSIONS
+    // ***************************
+
+    private fun checkPermissionsExternalStorage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_DENIED){
+                // Permission denied
+                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                // Show popup to request runtime permission
+                requestPermissions(permissions, PERMISSION_CODE)
+            }
+            else{
+                // Permission already granted
+                pickImageFromGallery()
+            }
+        }
+        else{
+            // System OS is < Marshmallow
+            pickImageFromGallery()
+        }
+    }
+
+    private fun checkPermissionsCamera() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (checkSelfPermission(Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_DENIED){
+                //permission was not enabled
+                val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                //show popup to request permission
+                requestPermissions(permission, PERMISSION_CODE)
+            }
+            else{
+                //permission already granted
+                openCamera()
+            }
+        }
+        else{
+            //system os is < marshmallow
+            openCamera()
+        }
+    }
+
+    // ***************************
     // RESULTS
     // ***************************
 
@@ -513,10 +529,4 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
             }
         }
     }
-
-/*    override fun onResume() {
-        super.onResume()
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
-    }*/
 }
