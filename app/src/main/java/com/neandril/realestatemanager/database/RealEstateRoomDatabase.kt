@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.icu.lang.UCharacter.GraphemeClusterBreak.V
+import com.neandril.realestatemanager.models.Thumbnail
 
 
 @Database(entities = [Estate::class], version = 1, exportSchema = false)
@@ -59,37 +60,35 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
             super.onOpen(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    // populateDatabase(database.estateDao())
+                    populateDatabase(database.estateDao())
                 }
             }
         }
 
-        /*suspend fun populateDatabase(estateDao: EstateDao) {
+        suspend fun populateDatabase(estateDao: EstateDao) {
             // Delete all content here.
             // estateDao.deleteAll()
 
-            val BRISBANE = LatLng(-27.47093, 153.0235)
-            val MELBOURNE = LatLng(-37.81319, 144.96298)
-
             // Add sample estate.
-            var estate = Estate(1,
-                "This is an address",
-                "-27.47093, 153.0235",
+            val estate = Estate(100,
+                "1 E 62ns St, New York, NY 10065, Etats-Unis",
+                "40.765922, -73.971076",
                 "Apartment",
-                "120000".toThousand(),
-                "150".toSquare(),
+                1580000,
+                "150",
                 "3",
                 "2",
                 "5",
-                "Agent1",
+                "Agent2",
                 true,
-                "2020-02-02",
+                "2020/02/02",
                 "",
                 null,
-                null)
+                null,
+                "Park, Zoo, School")
             estateDao.insert(estate)
 
-            estate = Estate(2,
+/*            estate = Estate(2,
                 "And an another address",
                 "-37.81319, 144.96298",
                 "Manor",
@@ -104,7 +103,7 @@ abstract class RealEstateRoomDatabase : RoomDatabase() {
                 "",
                 null,
                 null)
-            estateDao.insert(estate)
-        }*/
+            estateDao.insert(estate)*/
+        }
     }
 }

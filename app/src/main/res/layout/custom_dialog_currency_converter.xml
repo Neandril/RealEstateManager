@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/std_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/std_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/std_margin"
+            android:textSize="@dimen/title_size"
+            android:textStyle="bold"
+            android:text="@string/converter_title" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/std_margin"
+        android:text="@string/converter_rate" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/std_margin"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edittext_dollars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="0.4"
+            android:layout_margin="@dimen/std_margin"
+            android:inputType="numberDecimal"
+            android:drawableStart="@drawable/ic_dollars"
+            android:drawablePadding="@dimen/std_padding" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:src="@drawable/ic_compare_arrows"/>
+
+        <EditText
+            android:id="@+id/edittext_euros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="0.4"
+            android:layout_margin="@dimen/std_margin"
+            android:inputType="numberDecimal"
+            android:drawableStart="@drawable/ic_euros"
+            android:drawablePadding="@dimen/std_padding" />
+
+    </LinearLayout>
+
+</LinearLayout>

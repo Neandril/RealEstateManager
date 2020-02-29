@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="?attr/actionBarSize"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".views.activities.CreateRealEstate"
+    tools:context=".views.activities.CreateRealEstateActivity"
     tools:showIn="@layout/activity_create_real_estate">
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
@@ -174,18 +174,18 @@
                         android:textAlignment="center"
                         app:layout_constraintWidth_percent="1"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/edittext_nb_other_rooms"
+                        app:layout_constraintEnd_toStartOf="@id/edittext_nb_rooms"
                         app:layout_constraintStart_toEndOf="@+id/edittext_nb_bathroom"
                         app:layout_constraintHorizontal_weight="3"/>
 
 
                     <EditText
-                        android:id="@+id/edittext_nb_other_rooms"
+                        android:id="@+id/edittext_nb_rooms"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/std_margin"
-                        android:drawableStart="@drawable/ic_other_rooms"
-                        android:hint="@string/nb_other_rooms"
+                        android:drawableStart="@drawable/ic_total_rooms"
+                        android:hint="@string/nb_total_rooms"
                         android:importantForAutofill="no"
                         android:inputType="number"
                         android:textAlignment="center"

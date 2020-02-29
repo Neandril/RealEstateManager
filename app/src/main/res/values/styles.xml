@@ -12,6 +12,7 @@
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- Color of the title text in the Toolbar -->
         <item name="android:textColorPrimary">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorBlack</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
 
@@ -24,31 +25,17 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-
-    <!-- IN TEST -->
-    <style name="word_title">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+    <!-- BOTTOM SHEET DIALOG THEME -->
+    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_bottom_sheet_dialog</item>
     </style>
 
-
-    <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowNoTitle">false</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-
-        <item name="android:layout_margin">@dimen/std_margin</item>
-
-        <!-- Set this to true if you want Full Screen without status bar -->
-        <item name="android:windowFullscreen">false</item>
-
+    <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
-
-        <!-- This is important! Don't forget to set window background -->
-        <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
+
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
 </resources>

@@ -3,42 +3,31 @@ package com.neandril.realestatemanager.views.activities
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
-import com.afollestad.materialdialogs.DialogBehavior
-import com.afollestad.materialdialogs.LayoutMode
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.ModalDialog
-import com.afollestad.materialdialogs.bottomsheets.BottomSheet
-import com.afollestad.materialdialogs.customview.customView
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipDrawable
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
-import androidx.lifecycle.Observer
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
-import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.neandril.realestatemanager.R
-import com.neandril.realestatemanager.models.Estate
-import com.neandril.realestatemanager.viewmodels.EstateViewModel
+import com.neandril.realestatemanager.utils.Utils
+import com.neandril.realestatemanager.views.adapters.MyListAdapter
 import com.neandril.realestatemanager.views.base.BaseActivity
 import com.neandril.realestatemanager.views.fragments.FilterFragment
 import com.neandril.realestatemanager.views.fragments.FragmentMain
-import com.neandril.realestatemanager.views.fragments.FragmentMap
-import kotlin.math.max
 
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity() {
 
     private val newEstateActivityRequestCode = 1
     private lateinit var toolbar: Toolbar
@@ -46,9 +35,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var fab: FloatingActionButton
+    private lateinit var listview: ListView
 
-    private lateinit var estateViewModel: EstateViewModel
-    private var maxValue: Float? = 0f
 
     // ***************************
     // BASE METHODS
@@ -60,7 +48,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         toolbar = findViewById(R.id.toolbar_common)
         setSupportActionBar(toolbar)
@@ -68,6 +55,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         fab = findViewById(R.id.fab)
 
         this.configureDrawer()
+        this.configureListView()
         this.configureFabClick()
 
         val path = getDatabasePath("estate_manager_database").absolutePath
@@ -80,109 +68,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // ***************************
     // UI SETUP
     // ***************************
-
-    private fun showCustomView(dialogBehavior: DialogBehavior = ModalDialog) {
-        val dialog = MaterialDialog(this, dialogBehavior).show {
-            title(R.string.filter_title)
-            cancelable(false)
-            customView(R.layout.fragment_filter, scrollable = true, horizontalPadding = true)
-            val chipGroupTypes = findViewById<ChipGroup>(R.id.chipGroup_type)
-            val chipGroupPois = findViewById<ChipGroup>(R.id.chipGroup_pois)
-            val typeList = resources.getStringArray(R.array.estate_type)
-            val poisList = resources.getStringArray(R.array.point_of_interest)
-            val seekbarPrice = findViewById<CrystalRangeSeekbar>(R.id.seekbar_price)
-            val tvMaxPrice = findViewById<TextView>(R.id.textview_filter_max_price)
-
-            for (type in typeList) {
-                val chip = Chip(context)
-                val chipDrawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Widget_MaterialComponents_Chip_Choice)
-                chip.setChipDrawable(chipDrawable)
-                chip.text = type
-                chipGroupTypes.addView(chip)
-            }
-
-            for (poi in poisList) {
-                val chip = Chip(context)
-                val chipDrawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Widget_MaterialComponents_Chip_Filter)
-                chip.setChipDrawable(chipDrawable)
-                chip.text = poi
-                chipGroupPois.addView(chip)
-            }
-
-            seekbarPrice.setMaxValue(140000000F)
-            seekbarPrice.setOnRangeSeekbarChangeListener { _, maxValue ->
-                tvMaxPrice.text = maxValue.toString()
-            }
-
-
-
-            positiveButton(R.string.dialog_ok) { dialog ->
-                Log.d("CustomDialog", "OK")
-            }
-            negativeButton(R.string.dialog_ok)
-        }
-
-        dialog.show()
-    }
-
-    private fun getMaxPrice() {
-        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-        // val maxPrice = estateViewModel.getMaxPrice()
-/*        estateViewModel.getMaxPrice().observe(this, Observer {
-            maxValue = it.price.toFloat()
-            Log.d("MaxPrice", "MaxPrice: " + it.price)
-        })*/
-    }
-
-    /*private fun showFilterDialog() {
-        val viewGroup = findViewById<ViewGroup>(android.R.id.content)
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.filter_view, viewGroup, false)
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.filter_title)
-        builder.setCancelable(false)
-
-        val chipGroupTypes = dialogView.findViewById<ChipGroup>(R.id.chipGroup_type)
-        val chipGroupPois = dialogView.findViewById<ChipGroup>(R.id.chipGroup_pois)
-        val typeList = resources.getStringArray(R.array.estate_type)
-        val poisList = resources.getStringArray(R.array.point_of_interest)
-
-        for (type in typeList) {
-            val chip = Chip(dialogView.context)
-            val chipDrawable = ChipDrawable.createFromAttributes(this, null, 0, R.style.Widget_MaterialComponents_Chip_Choice)
-            chip.setChipDrawable(chipDrawable)
-            chip.text = type
-            chipGroupTypes.addView(chip)
-        }
-
-        for (poi in poisList) {
-            val chip = Chip(dialogView.context)
-            val chipDrawable = ChipDrawable.createFromAttributes(this, null, 0, R.style.Widget_MaterialComponents_Chip_Filter)
-            chip.setChipDrawable(chipDrawable)
-            chip.text = poi
-            chipGroupPois.addView(chip)
-        }
-
-
-        builder.setView(dialogView)
-        builder.setPositiveButton(R.string.dialog_ok)
-        { _, _ ->
-            Toast.makeText(this, "OK", Toast.LENGTH_LONG).show()
-        }
-
-        builder.setNegativeButton("Cancel")
-        { _, _ ->
-            Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show()
-        }
-
-        builder.setNeutralButton("Reset all")
-        { _, _ ->
-            Toast.makeText(this, "Reset all", Toast.LENGTH_LONG).show()
-        }
-
-        builder.show()
-    }*/
-
     private fun configureDrawer() {
         drawer = findViewById(R.id.drawer_layout)
 
@@ -190,8 +75,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         drawer.addDrawerListener(toggle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -217,29 +100,47 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.action_add -> this.launchCreateNewEstateActivity()
-            R.id.action_search -> Toast.makeText(this, "Search Clicked", Toast.LENGTH_LONG).show()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_item_one -> showFragment(FragmentMap()) // Toast.makeText(this, "Item one", Toast.LENGTH_LONG).show()
-            R.id.nav_item_two -> Toast.makeText(this, "Item two", Toast.LENGTH_LONG).show()
-            R.id.nav_item_three -> Toast.makeText(this, "Item three", Toast.LENGTH_LONG).show()
-        }
-        drawer.closeDrawer(GravityCompat.START)
+    // Custom drawer menu configuration
+    private fun configureListView() {
+        listview = findViewById(R.id.list_menu_items)
+        //
+        val listItems = arrayOf(
+            resources.getString(R.string.menu_map_view),
+            resources.getString(R.string.menu_loan_simulator),
+            resources.getString(R.string.menu_currency_converter))
+        val listIcons = arrayOf(
+            R.drawable.ic_map_view,
+            R.drawable.ic_loan_simulator,
+            R.drawable.ic_euros)
 
-        return true
+        val myListAdapter = MyListAdapter(this, listItems, listIcons)
+        listview.adapter = myListAdapter
+
+        listview.setOnItemClickListener(){adapterView, _, position, _ ->
+
+            when (adapterView.getItemIdAtPosition(position).toInt()) {
+                0 -> {
+                    val intent = Intent(this, MapViewActivity::class.java)
+                    startActivity(intent)
+                }
+                1 -> Toast.makeText(this, "Click on Loan", Toast.LENGTH_LONG).show()
+                2 -> showConverterDialog()
+            }
+
+            drawer.closeDrawer(GravityCompat.START)
+        }
     }
 
     private fun configureFabClick() {
         fab.setOnClickListener {
-            // showFilterDialog()
-            showCustomView(BottomSheet(LayoutMode.WRAP_CONTENT))
-/*            val fm = supportFragmentManager
-            fm.beginTransaction().add(FilterFragment(), "modal").commit()*/
+
+            val fm = supportFragmentManager
+            fm.beginTransaction().add(FilterFragment(), "modal").commit()
 
         }
     }
@@ -252,7 +153,53 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun launchCreateNewEstateActivity() {
-        val intent = Intent(this, CreateRealEstate::class.java)
+        val intent = Intent(this, CreateRealEstateActivity::class.java)
         startActivityForResult(intent, newEstateActivityRequestCode)
+    }
+
+    private fun showConverterDialog() {
+        val viewGroup = findViewById<ViewGroup>(android.R.id.content)
+        val builder = AlertDialog.Builder(this)
+
+
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog_currency_converter, viewGroup, false)
+        val editTextDollars = dialogView.findViewById<EditText>(R.id.edittext_dollars)
+        val editTextEuros = dialogView.findViewById<EditText>(R.id.edittext_euros)
+
+        editTextDollars.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (editTextDollars.hasFocus() && !editTextDollars.text.isNullOrEmpty()) {
+                    editTextEuros.setText(
+                        Utils.convertDollarToEuro(
+                            s.toString().toInt()
+                        ).toString())
+                }
+            }
+        })
+
+        editTextEuros.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (editTextEuros.hasFocus() && !editTextEuros.text.isNullOrEmpty()) {
+                    editTextDollars.setText(
+                        Utils.convertEuroToDollar(
+                            s.toString().toInt()
+                        ).toString())
+                }
+            }
+        })
+
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+        builder.setPositiveButton(R.string.dialog_ok)
+        { _, _ -> }
+        builder.show()
     }
 }

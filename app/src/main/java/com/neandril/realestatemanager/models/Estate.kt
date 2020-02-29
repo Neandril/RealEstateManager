@@ -11,11 +11,11 @@ data class Estate (
     val address: String,
     val addressLatLng: String,
     val type: String,
-    val price: Int,
+    @ColumnInfo(name = "price") val price: Int,
     val surface: String,
     val nbBathrooms: String,
     val nbBedrooms: String,
-    val nbOtherRooms: String,
+    val nbTotalRooms: String,
     val agentName: String,
     val sold: Boolean,
     val soldDate: String,
@@ -24,5 +24,5 @@ data class Estate (
     val addressThumbnail: Bitmap?,
     val points_of_interest: String?
 ) : Serializable {
-    var isExpanded = false
+    var isExpanded = false // Used to determine whether the view is expanded
 }

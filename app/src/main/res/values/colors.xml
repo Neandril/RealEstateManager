@@ -8,4 +8,6 @@
     <color name="colorBlack">#000</color>
     <color name="transparent">#00000000</color>
     <color name="light_grey">#80BAC5E9</color>
+
+    <color name="dialog_bg_color">#E9E2E2</color>
 </resources>

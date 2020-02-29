@@ -2,6 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp"
+    style="@style/Theme.MaterialComponents.Light.NoActionBar"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -9,6 +14,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="@dimen/std_margin">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_large"
+            android:paddingBottom="@dimen/std_margin"
+            android:text="TITLE" />
 
         <TextView
             android:id="@+id/textview_filter_price"
@@ -67,7 +80,7 @@
                 android:id="@+id/seekbar_surface"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:gap="10"
+                app:steps="10"
                 app:left_thumb_color="@color/colorPrimary"
                 app:left_thumb_color_pressed="@color/colorSecondary"
                 app:right_thumb_color="@color/colorPrimary"
@@ -108,6 +121,7 @@
                 android:text="@string/filter_room" />
 
             <EditText
+                android:id="@+id/edittext_filter_rooms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
@@ -131,6 +145,7 @@
                 android:text="@string/filter_photos" />
 
             <EditText
+                android:id="@+id/edittext_filter_photos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
@@ -156,7 +171,8 @@
                 android:id="@+id/chipGroup_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                style="@style/Widget.MaterialComponents.Chip.Filter"/>
 
         </LinearLayout>
 
@@ -189,6 +205,7 @@
                 android:text="@string/filter_locality" />
 
             <EditText
+                android:id="@+id/edittext_filter_locality"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"
@@ -199,23 +216,66 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <CheckBox
-                android:layout_width="wrap_content"
+                android:id="@+id/checkbox_isSold"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:button="@null"
                 android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                android:text="@string/checkbox_sold" />
+                android:text="@string/filter_include_sold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/textView_restalAll"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:textAlignment="center"
-                android:text="@string/sold_date"/>
+                android:layout_weight="0.2"
+                android:textAlignment="textStart"
+                android:layout_marginTop="@dimen/std_margin"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="@color/colorBlack"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+                android:text="RESET ALL"/>
+
+            <TextView
+                android:id="@+id/textView_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:layout_marginTop="@dimen/std_margin"
+                android:background="@color/transparent"
+                android:textAlignment="textEnd"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="@color/colorBlack"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+                android:text="CANCEL"/>
+
+            <TextView
+                android:id="@+id/textView_btnOk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/std_margin"
+                android:layout_weight="0.3"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="@color/colorBlack"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+                android:text="OK"/>
 
         </LinearLayout>
 

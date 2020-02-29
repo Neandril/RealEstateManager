@@ -2,13 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
         <item android:id="@+id/nav_item_one"
-            android:icon="@drawable/ic_other_rooms"
-            android:title="Item 1" />
+            android:icon="@drawable/ic_map_view"
+            android:title="@string/menu_map_view" />
+
         <item android:id="@+id/nav_item_two"
-            android:icon="@drawable/ic_bedroom"
-            android:title="Item 2" />
+            android:icon="@drawable/ic_loan_simulator"
+            android:title="@string/menu_loan_simulator" />
+
         <item android:id="@+id/nav_item_three"
-            android:icon="@drawable/ic_bathroom"
-            android:title="Item 3" />
+            android:icon="@drawable/ic_euros"
+            android:title="@string/menu_currency_converter" />
     </group>
 </menu>

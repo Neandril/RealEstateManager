@@ -31,9 +31,12 @@ class EstateViewModel(application: Application) : AndroidViewModel(application) 
         repository.updateEstate(estate)
     }
 
+    fun getFiltered(minPrice: Int, maxPrice: Int,
+                    minSurface: Int, maxSurface: Int,
+                    nbRooms: Int, type: String, points_of_interest: String)
+            = repository.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest)
+
 /*    fun getMaxPrice() = viewModelScope.launch {
         repository.getMaxPrice()
     }*/
-
-    /*fun getMaxPrice() = repository.getMaxPrice()*/
 }

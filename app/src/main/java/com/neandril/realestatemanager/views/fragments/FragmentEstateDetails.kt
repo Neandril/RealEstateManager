@@ -1,6 +1,7 @@
 package com.neandril.realestatemanager.views.fragments
 
 import android.graphics.Color
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -25,7 +26,7 @@ class FragmentEstateDetails : BaseFragment() {
     private var descriptionTextView: TextView? = null
     private var nbBathRoomsTextView: TextView? = null
     private var nbBedRoomsTextView: TextView? = null
-    private var nbOtherRoomsTextView: TextView? = null
+    private var nbTotalRoomsTextView: TextView? = null
     private var addressTextView: TextView? = null
     private var agentNameTextView: TextView? = null
     private var soldDateTextView: TextView? = null
@@ -59,7 +60,7 @@ class FragmentEstateDetails : BaseFragment() {
         descriptionTextView = activity?.findViewById(R.id.textView_details_description)
         nbBathRoomsTextView = activity?.findViewById(R.id.textView_details_nbBathrooms)
         nbBedRoomsTextView = activity?.findViewById(R.id.textView_details_nbBedrooms)
-        nbOtherRoomsTextView = activity?.findViewById(R.id.textView_details_nbOthers)
+        nbTotalRoomsTextView = activity?.findViewById(R.id.textView_details_nbTotal)
         addressTextView = activity?.findViewById(R.id.textView_details_address)
         agentNameTextView = activity?.findViewById(R.id.textView_details_agent)
         soldDateTextView = activity?.findViewById(R.id.textView_details_soldDate)
@@ -72,19 +73,26 @@ class FragmentEstateDetails : BaseFragment() {
 
     private fun displayDetails(estate: Estate) {
         // Split address after commas, and display it in a multilined style inside the textview
-        val items = estate.address.split(", ")
-        addressTextView?.text = estate.address.replace(", ", "• ")
-
-
-        // Display the type, and city
-        typeTextView?.text = getString(R.string.type_and_city, estate.type, items[1])
+        when {
+            estate.address != "" -> {
+                val items = estate.address.split(", ")
+                addressTextView?.text = estate.address.replace(", ", "• ")
+                // Display the type, and city
+                typeTextView?.text = getString(R.string.type_and_city, estate.type, items[1])
+            }
+            else -> {
+                typeTextView?.text = estate.type
+                addressTextView?.visibility = View.GONE
+                mapThumbnail?.visibility = View.GONE
+            }
+        }
 
         // Fill all others textviews
         priceTextView?.text = estate.price.toString().toThousand()
         surfaceTextView?.text = estate.surface.toSquare()
         nbBathRoomsTextView?.text = estate.nbBathrooms
         nbBedRoomsTextView?.text = estate.nbBedrooms
-        nbOtherRoomsTextView?.text = estate.nbOtherRooms
+        nbTotalRoomsTextView?.text = estate.nbTotalRooms
         agentNameTextView?.text = estate.agentName
         imgList = estate.estatePhotos
         poisTextView?.text = getString(R.string.details_pois, estate.points_of_interest)

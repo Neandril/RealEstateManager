@@ -5,10 +5,8 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -17,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +33,14 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import com.neandril.realestatemanager.BuildConfig
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
@@ -43,17 +50,18 @@ import com.neandril.realestatemanager.views.adapters.ImagesRecyclerViewAdapter
 import com.neandril.realestatemanager.views.base.BaseActivity
 import java.util.*
 
-class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
+class CreateRealEstateActivity : BaseActivity(), OnMapReadyCallback {
 
     private var apikey: String = BuildConfig.ApiKey
     private lateinit var estateViewModel: EstateViewModel
+    private lateinit var toolbar: Toolbar
 
     // Variables
     private var image: Thumbnail = Thumbnail("","")
     private var imageDescription: String = ""
     private var strLatLng: String = ""
     private var latLng: LatLng? = null
-    private var imgList: MutableList<Thumbnail> = mutableListOf()
+    private var imgList: MutableList<Thumbnail>? = mutableListOf()
     private var imageUri: Uri? = null
     private var estateId: Int = 0
     private var mSnapshot: Bitmap? = null
@@ -84,7 +92,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
 
     companion object {
         const val AUTOCOMPLETE_REQUEST_CODE = 3010
-        const val PERMISSION_CODE = 1001
         const val GALLERY = 100
         const val CAMERA = 101
     }
@@ -100,8 +107,10 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize map api
-        Places.initialize(this, apikey)
+        toolbar = findViewById(R.id.toolbar_common)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         // Get the estateId from previous activity
         estateId = intent.getIntExtra("estateId", 0)
@@ -113,13 +122,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         this.configureSoldDate()
         this.buttonPhotoClick()
         this.buttonAddAddressClick()
-
-        listItems = resources.getStringArray(R.array.point_of_interest)
-        checkedItems = BooleanArray(listItems.size)
-
-        poisTextView.setOnClickListener {
-            showPoiDialog()
-        }
     }
 
     // ***************************
@@ -143,7 +145,7 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         surfaceEditText = findViewById(R.id.edittext_surface)
         nbBathRoomsEditText = findViewById(R.id.edittext_nb_bathroom)
         nbBedRoomsEditText = findViewById(R.id.edittext_nb_bedroom)
-        nbOtherRoomsEditText = findViewById(R.id.edittext_nb_other_rooms)
+        nbOtherRoomsEditText = findViewById(R.id.edittext_nb_rooms)
         btnPhoto = findViewById(R.id.btn_estate_photo)
         btnAddAddress = findViewById(R.id.btn_add_address)
         agentNameEditText = findViewById(R.id.agentName_editText)
@@ -152,9 +154,17 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
         descriptionEditText = findViewById(R.id.edittext_description)
         cardviewMap = findViewById(R.id.cardview_map)
         poisTextView = findViewById(R.id.textview_pois)
+
+        poisTextView.setOnClickListener {
+            showPoiDialog()
+        }
     }
 
     private fun checkInputs(): Boolean {
+        if (imgList?.size == 0) {
+            imgList = null
+        }
+
         return !(addressTextView.text.isEmpty()  &&
                 priceEditText.text.isEmpty() &&
                 surfaceEditText.text.isEmpty() &&
@@ -218,7 +228,7 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
             surfaceEditText.setText(id.surface)
             nbBathRoomsEditText.setText(id.nbBathrooms)
             nbBedRoomsEditText.setText(id.nbBedrooms)
-            nbOtherRoomsEditText.setText(id.nbOtherRooms)
+            nbOtherRoomsEditText.setText(id.nbTotalRooms)
             addressTextView.text = id.address
             descriptionEditText.setText(id.description)
             strLatLng = id.addressLatLng
@@ -228,32 +238,44 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
             soldDateTextView.text = id.soldDate
             poisTextView.text = id.points_of_interest
 
-            // Convert srting to lat lng
-            val sLatLng = id.addressLatLng.split(",")
-            if (sLatLng.isNotEmpty()) {
-                val lat: Double = sLatLng[0].toDouble()
-                val lng: Double = sLatLng[1].toDouble()
-                latLng = LatLng(lat, lng)
+            // Get LatLng if available, else hide the map
+            when {
+                id.addressLatLng.isNotEmpty() -> {
+                    // Convert srting to lat lng
+                    val sLatLng = id.addressLatLng.split(",")
+                    if (sLatLng.isNotEmpty()) {
+                        val lat: Double = sLatLng[0].toDouble()
+                        val lng: Double = sLatLng[1].toDouble()
+                        latLng = LatLng(lat, lng)
+                    }
+
+                    val mMapFragment = this.supportFragmentManager.findFragmentById(R.id.create_real_estate_map) as SupportMapFragment?
+                    mMapFragment?.getMapAsync(this)
+                }
+                else -> cardviewMap.visibility = View.GONE
             }
 
-            val mMapFragment = this.supportFragmentManager.findFragmentById(R.id.create_real_estate_map) as SupportMapFragment?
-            mMapFragment?.getMapAsync(this)
+            // Set up image list
+            if (imgList != null) {
+                id.estatePhotos?.forEach {
+                    imgList?.add(it)
+                }
 
-            id.estatePhotos?.forEach {
-                imgList.add(it)
+                imageRecyclerView = findViewById(R.id.recyclerview_images)
+
+                val adapter = ImagesRecyclerViewAdapter(this)
+                imageRecyclerView.adapter = adapter
+                imageRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+                adapter.setThumbnail(this.imgList!!)
             }
-
-            imageRecyclerView = findViewById(R.id.recyclerview_images)
-
-            val adapter = ImagesRecyclerViewAdapter(this)
-            imageRecyclerView.adapter = adapter
-            imageRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-            adapter.setThumbnail(imgList)
         })
     }
 
     private fun buttonAddAddressClick() {
         btnAddAddress.setOnClickListener {
+            // Initialize map api
+            Places.initialize(this, apikey)
+
             val fields = listOf(
                 Place.Field.ID,
                 Place.Field.ADDRESS,
@@ -312,20 +334,23 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
             imageDescription = descriptionEditText.text.toString()
 
             image = Thumbnail(path, imageDescription)
-            imgList.add(image)
+            imgList?.add(image)
 
             imageRecyclerView = findViewById(R.id.recyclerview_images)
 
             val adapter = ImagesRecyclerViewAdapter(this)
             imageRecyclerView.adapter = adapter
             imageRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-            adapter.setThumbnail(imgList)
+            adapter.setThumbnail(this.imgList!!)
         }
 
         builder.show()
     }
 
     private fun showPoiDialog() {
+        listItems = resources.getStringArray(R.array.point_of_interest)
+        checkedItems = BooleanArray(listItems.size)
+
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.poi_title)
 
@@ -430,45 +455,49 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
     // ***************************
 
     private fun checkPermissionsExternalStorage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED){
-                // Permission denied
-                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                // Show popup to request runtime permission
-                requestPermissions(permissions, PERMISSION_CODE)
-            }
-            else{
-                // Permission already granted
-                pickImageFromGallery()
-            }
-        }
-        else{
-            // System OS is < Marshmallow
-            pickImageFromGallery()
-        }
+        Dexter
+            .withActivity(this)
+            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .withListener(object: PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    pickImageFromGallery()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+                    Log.d("Dexter", "Permission Rationale")
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    Log.d("Dexter", "Permission Denied")
+                }
+
+            })
+            .check()
     }
 
     private fun checkPermissionsCamera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkSelfPermission(Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_DENIED ||
-                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_DENIED){
-                //permission was not enabled
-                val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                //show popup to request permission
-                requestPermissions(permission, PERMISSION_CODE)
-            }
-            else{
-                //permission already granted
-                openCamera()
-            }
-        }
-        else{
-            //system os is < marshmallow
-            openCamera()
-        }
+        Dexter
+            .withActivity(this)
+            .withPermissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object: MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    openCamera()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    Log.d("Dexter", "Permission Rationale")
+                }
+
+            })
+            .check()
     }
 
     // ***************************
@@ -480,24 +509,16 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
 
         when (requestCode) {
             GALLERY -> {
-                Log.d("CreateRealEstate", "requestCode: GALLERY")
                 showDescriptionDialog(data?.data.toString())
                 // imageRecyclerView.setImageURI(data?.data)
                 // thumbnail.description = ""
-
-                Log.d("CreateRealEstate", "Room: " + data?.data.toString())
             }
             CAMERA -> {
-                Log.d("CreateRealEstate", "requestCode: CAMERA")
                 showDescriptionDialog(imageUri.toString())
                 // imageRecyclerView.setImageURI(data?.data)
                 // thumbnail.description = ""
-
-                Log.d("CreateRealEstate", "Room: ${imageUri.toString()}")
-
             }
             AUTOCOMPLETE_REQUEST_CODE -> {
-                Log.d("CreateRealEstate", "requestCode: AUTOCOMPLETE")
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         val place = Autocomplete.getPlaceFromIntent(data!!)
@@ -520,7 +541,6 @@ class CreateRealEstate : BaseActivity(), OnMapReadyCallback {
                     AutocompleteActivity.RESULT_ERROR -> {
                         val status = Autocomplete.getStatusFromIntent(data!!)
                         Toast.makeText(this, "Error: " + status.statusMessage!!, Toast.LENGTH_LONG).show()
-                        Log.i("CreateRealEstate", status.statusMessage!!)
                     }
                     Activity.RESULT_CANCELED -> {
                         // The user canceled the operation.

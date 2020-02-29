@@ -23,8 +23,13 @@ class DotIndicatorPagerAdapter(thumbnail: List<Thumbnail>?) : PagerAdapter() {
         val imageView: ImageView = item.findViewById(R.id.item_image)
         val imageOverlay: TextView = item.findViewById(R.id.item_image_overlay)
 
-        imageView.setImageURI(imgList?.get(position)?.image?.toUri())
-        imageOverlay.text = imgList?.get(position)?.description
+        if (imgList != null) {
+            imageView.setImageURI(imgList?.get(position)?.image?.toUri())
+            imageOverlay.text = imgList?.get(position)?.description
+        } else {
+            imageView.setImageResource(R.drawable.no_preview_available)
+            imageOverlay.text = "No preview"
+        }
 
         item.setOnClickListener {
             Log.d("ViewPager", "clicked: " + imgList?.get(position)?.description)
@@ -51,7 +56,7 @@ class DotIndicatorPagerAdapter(thumbnail: List<Thumbnail>?) : PagerAdapter() {
     }
 
     override fun getCount(): Int {
-        return if (imgList?.isNotEmpty()!!) {
+        return if (imgList != null) {
             imgList!!.size
         } else {
             1

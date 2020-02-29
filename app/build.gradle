@@ -58,6 +58,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
     implementation 'com.android.support:multidex:1.0.3'
 
+    // DEXTER (permissions management)
+    implementation 'com.karumi:dexter:6.0.0'
+
     // UI
     implementation "com.google.android.material:material:$rootProject.materialVersion"
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
@@ -74,6 +77,7 @@ dependencies {
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     // LIFECYCLE COMPONENTS
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"

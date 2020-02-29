@@ -21,8 +21,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCBXu4zBIgpguLv2RttqFF6xNE9s6sTgR4"/>
 
-        <activity android:name=".views.activities.CreateRealEstate" />
-        <activity android:name=".views.activities.EstateDetailsActivity" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".views.activities.MainActivity" />
+
+        <activity
+            android:name=".views.activities.CreateRealEstateActivity"
+            android:parentActivityName=".views.activities.MainActivity"/>
+        <activity
+            android:name=".views.activities.EstateDetailsActivity"
+            android:parentActivityName=".views.activities.MainActivity"/>
+        <activity
+            android:name=".views.activities.MapViewActivity"
+            android:parentActivityName=".views.activities.MainActivity" />
 
         <activity
             android:name=".views.activities.MainActivity"

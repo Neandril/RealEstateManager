@@ -6,6 +6,10 @@
     <string name="action_search">Search</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_convert">Currency converter</string>
+    <string name="menu_map_view">Map</string>
+    <string name="menu_loan_simulator">Loan simulator</string>
+    <string name="menu_currency_converter">Currency converter</string>
 
     <!-- STRING IN CREATE NEW ESTATE -->
     <string name="agent_name_title">Name of the agent</string>
@@ -15,7 +19,7 @@
     <string name="estate_rooms">ROOMS DETAILS</string>
     <string name="nb_bathrooms">Bathroom</string>
     <string name="nb_bedrooms">Bedroom</string>
-    <string name="nb_other_rooms">Other</string>
+    <string name="nb_total_rooms">Total</string>
     <string name="estate_address">ADDRESS</string>
     <string name="estate_address_hint">Address</string>
     <string name="estate_description">DESCRIPTION</string>
@@ -31,7 +35,7 @@
     <string name="checkbox_sold">Is this estate sold ?</string>
     <string name="sold_date">Sold date</string>
     <string name="delete_image_content_description">Delete image</string>
-    <string name="sold_date_format">%1$d-%2$d-%3$d</string>
+    <string name="sold_date_format">%1$d/%2$d/%3$d</string>
     <string name="type_and_city">%1$s • %2$s</string>
     <string name="no_description">This real estate has not any description yet.</string>
     <string name="poi_title">Points of interest</string>
@@ -46,13 +50,15 @@
     <string name="filter_type">Type of the estate</string>
     <string name="filter_points_of_interest">Points of interest</string>
     <string name="filter_locality">Location (city, state or province)</string>
-    <string name="filter_sold">SOLD ?</string>
+    <string name="filter_include_sold">Include estates sold ?</string>
 
     <!-- DIALOGS STRINGS -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_room_desc_title">Room</string>
     <string name="dialog_inputs_title">Bad inputs</string>
     <string name="dialog_verfy_inputs">Please check inputs</string>
+    <string name="converter_title">CONVERTER</string>
+    <string name="converter_rate">Current rate: \n1€ = 0.831$\n(rounded up)</string>
 
     <!-- ARRAYS -->
     <string-array name="estate_type">

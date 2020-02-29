@@ -51,9 +51,30 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/menu_drawer" >
+        android:layout_gravity="start" >
+        <!--app:menu="@menu/menu_drawer"-->
+        <!--app:headerLayout="@layout/nav_header_main"-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <include layout="@layout/nav_header_main" />
+
+            <ListView
+                android:id="@+id/list_menu_items"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/std_margin"
+                android:layout_marginEnd="@dimen/std_margin"
+                android:layout_marginTop="@dimen/margin_listview"
+                android:layout_marginBottom="@dimen/margin_listview"
+                android:layout_gravity="center_vertical"
+                android:divider="@null"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
     </com.google.android.material.navigation.NavigationView>
 

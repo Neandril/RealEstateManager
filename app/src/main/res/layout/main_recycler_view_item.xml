@@ -114,14 +114,14 @@
                     android:textAlignment="center"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/main_recyclerview_nbBathRooms_textview"
-                    app:layout_constraintEnd_toStartOf="@id/main_recyclerview_nbOtherRooms_textview"/>
+                    app:layout_constraintEnd_toStartOf="@id/main_recyclerview_nbRooms_textview"/>
 
                 <TextView
-                    android:id="@+id/main_recyclerview_nbOtherRooms_textview"
+                    android:id="@+id/main_recyclerview_nbRooms_textview"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/std_margin"
-                    android:drawableStart="@drawable/ic_other_rooms"
+                    android:drawableStart="@drawable/ic_total_rooms"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/std_margin"
-                    android:text="2020-02-02"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/main_recyclerview_isSold_textview"
