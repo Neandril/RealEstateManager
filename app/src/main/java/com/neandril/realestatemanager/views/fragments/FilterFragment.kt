@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,7 +25,7 @@ import com.neandril.realestatemanager.models.FilterModel
 import com.neandril.realestatemanager.utils.toSquare
 import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
-import kotlinx.android.synthetic.main.fragment_filter.*
+import com.neandril.realestatemanager.views.adapters.MainRecyclerViewAdapter
 
 class FilterFragment : BottomSheetDialogFragment() {
 
@@ -47,8 +48,8 @@ class FilterFragment : BottomSheetDialogFragment() {
         root.viewTreeObserver.addOnGlobalLayoutListener {
             val dialog = dialog as BottomSheetDialog
             val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
-            val behavior = BottomSheetBehavior.from(bottomSheet!!)
-            behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+/*            val behavior = BottomSheetBehavior.from(bottomSheet!!)
+            behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED*/
             dialog.setCancelable(false)
 
             // Make the bottom sheet to fill the half of the screen (div by 2)
@@ -111,6 +112,8 @@ class FilterFragment : BottomSheetDialogFragment() {
                 getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois))
 
             buildRequest(filtered)
+
+            dialog?.dismiss()
         }
 
         btnCancel.setOnClickListener {
@@ -171,19 +174,26 @@ class FilterFragment : BottomSheetDialogFragment() {
     }
 
     private fun buildRequest(filter: FilterModel) {
+        val type = filter.estateType?.joinToString(",","%", "%") ?: ""
+        val pointsOfInterest = filter.estatePois?.joinToString(",","%", "%") ?: ""
+
         Log.d("Filtered", "Filter: price range: " + filter.minPrice + " - " + filter.maxPrice + "\n" +
                 "surface range: " + filter.minSurface + " - " + filter.maxSurface + "\n" +
-                "rooms: " + filter.nbRooms + ", type: " + filter.estateType?.get(0) + "\n" +
-                "points of interest: " + filter.estatePois?.get(0))
+                "rooms: " + filter.nbRooms + ", type: " + type + "\n" +
+                "points of interest: " + pointsOfInterest)
 
         estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-        val type = filter.estateType?.joinToString(",","%", "%") ?: ""
-        val points_of_interest = filter.estatePois?.joinToString(",","%", "%") ?: ""
-
         estateViewModel.getFiltered(filter.minPrice, filter.maxPrice, filter.minSurface, filter.maxSurface,
-            filter.nbRooms?: 0, type, points_of_interest
-        ).observe(viewLifecycleOwner, Observer { fi ->
-            Log.d("FromViewModel", "request: " + fi.size)
+            filter.nbRooms?: 0, type, pointsOfInterest
+        ).observe(viewLifecycleOwner, Observer {
+            Log.d("FromViewModel", "request: " + it.size)
+
+            val recyclerView = activity?.findViewById<RecyclerView>(R.id.recyclerview)
+            val adapter = MainRecyclerViewAdapter(activity?.applicationContext!!)
+            recyclerView?.adapter = adapter
+            recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
+
+            it.let { adapter.setEstate(it) }
         })
 
     }

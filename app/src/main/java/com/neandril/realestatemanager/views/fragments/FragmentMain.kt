@@ -40,38 +40,15 @@ class FragmentMain : BaseFragment() {
         })
     }
 
-    fun updateRecyclerView(filters: FilterModel) {
-
-        Log.d("FromFragment", "Filter: price range: " + filters.minPrice + " - " + filters.maxPrice + "\n" +
-                "surface range: " + filters.minSurface + " - " + filters.maxSurface + "\n" +
-                "rooms: " + filters.nbRooms +
-                "type: " + filters.estateType + "\n" +
-                "pois: " + filters.estatePois + "\n")
-
-        /*estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-        estateViewModel.allEstates.removeObservers(this)*/
-
-/*        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-        estateViewModel.getFiltered(filters.minPrice, filters.maxPrice,
-            filters.minSurface, filters.maxSurface, filters.nbRooms!!,
-            filters.estateType?.get(0).toString(), filters.estatePois?.get(0).toString())*/
-    }
-
     override fun onResume() {
         super.onResume()
 
-        if (this.arguments?.getSerializable("filters") != null) {
-
-            Log.d("onResume", "non null")
-
+        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
+        if (estateViewModel.allEstates.hasObservers()) {
+            Log.d("onResume", "allEstate: true")
         } else {
-            Log.d("onResume", "null")
+            Log.d("onResume", "allEstate: false")
         }
-/*        Log.d("FromFragment", "Filter: price range: " + filters.minPrice + " - " + filters.maxPrice + "\n" +
-                "surface range: " + filters.minSurface + " - " + filters.maxSurface + "\n" +
-                "rooms: " + filters.nbRooms +
-                "type: " + filters.estateType + "\n" +
-                "pois: " + filters.estatePois + "\n")*/
 
 
         configureRecyclerView()

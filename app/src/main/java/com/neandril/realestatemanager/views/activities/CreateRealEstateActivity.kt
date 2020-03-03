@@ -45,6 +45,7 @@ import com.neandril.realestatemanager.BuildConfig
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.models.Thumbnail
+import com.neandril.realestatemanager.utils.paddingZero
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.adapters.ImagesRecyclerViewAdapter
 import com.neandril.realestatemanager.views.base.BaseActivity
@@ -401,14 +402,14 @@ class CreateRealEstateActivity : BaseActivity(), OnMapReadyCallback {
     private fun configureDatePicker() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH) + 1
+        val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         soldDateTextView.setOnClickListener {
             val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener
             { _, year, month, dayOfMonth ->
                 Log.d("DatePicker", "Date: $year , $month , $dayOfMonth")
-                soldDateTextView.text = getString(R.string.sold_date_format, year, month, dayOfMonth)
+                soldDateTextView.text = getString(R.string.sold_date_format, year, month.paddingZero(), dayOfMonth.paddingZero())
             }, year, month, day)
             datePickerDialog.show()
         }

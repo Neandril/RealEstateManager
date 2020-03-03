@@ -8,6 +8,10 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 
+fun Int.paddingZero(): String {
+    return String.format("%02d", this)
+}
+
 // Returns a string with the "m²" suffix
 fun String.toSquare() : String {
     return String.format("$this m²", this)
