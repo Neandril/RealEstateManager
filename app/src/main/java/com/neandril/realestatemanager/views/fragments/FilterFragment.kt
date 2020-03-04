@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -94,13 +95,14 @@ class FilterFragment : BottomSheetDialogFragment() {
         val editTextRooms = view.findViewById<EditText>(R.id.edittext_filter_rooms)
         val editTextPhotos = view.findViewById<EditText>(R.id.edittext_filter_photos)
         val editTextLocality = view.findViewById<EditText>(R.id.edittext_filter_locality)
+        val cbIsSold = view.findViewById<CheckBox>(R.id.checkbox_isSold)
 
         btnOk.setOnClickListener {
             Log.d("FilterFragment", "Clicked on: OK")
 
             val filterRooms = if (!editTextRooms.text.isNullOrEmpty()) editTextRooms.text.toString().toInt() else null
             val filterPhotos = if (!editTextPhotos.text.isNullOrEmpty()) editTextPhotos.text.toString().toInt() else null
-            val filterLocality = if (!editTextLocality.text.isNullOrEmpty()) editTextLocality.text.toString() else null
+            val filterLocality = if (!editTextLocality.text.isNullOrEmpty()) getString(R.string.filter_locality_format, editTextLocality.text.toString()) else null
             val minPrice = seekbarPrice.selectedMinValue.toInt()
             val maxPrice = seekbarPrice.selectedMaxValue.toInt()
             val minSurface = seekbarSurface.selectedMinValue.toInt()
@@ -109,7 +111,7 @@ class FilterFragment : BottomSheetDialogFragment() {
             val filtered = FilterModel(
                 minPrice, maxPrice, minSurface, maxSurface,
                 filterRooms,
-                getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois))
+                getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois), filterLocality)
 
             buildRequest(filtered)
 
@@ -180,11 +182,12 @@ class FilterFragment : BottomSheetDialogFragment() {
         Log.d("Filtered", "Filter: price range: " + filter.minPrice + " - " + filter.maxPrice + "\n" +
                 "surface range: " + filter.minSurface + " - " + filter.maxSurface + "\n" +
                 "rooms: " + filter.nbRooms + ", type: " + type + "\n" +
-                "points of interest: " + pointsOfInterest)
+                "points of interest: " + pointsOfInterest + "\n" +
+                "locality: " + filter.location)
 
         estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
         estateViewModel.getFiltered(filter.minPrice, filter.maxPrice, filter.minSurface, filter.maxSurface,
-            filter.nbRooms?: 0, type, pointsOfInterest
+            filter.nbRooms?: 0, type, pointsOfInterest, filter.location?: ""
         ).observe(viewLifecycleOwner, Observer {
             Log.d("FromViewModel", "request: " + it.size)
 

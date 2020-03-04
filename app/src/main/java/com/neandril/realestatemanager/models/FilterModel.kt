@@ -10,8 +10,8 @@ data class FilterModel (
     var nbRooms: Int?,
     // var nbPhotos: Int?,
     var estateType: MutableList<String>?,
-    var estatePois: MutableList<String>?
-    // var location: String?,
+    var estatePois: MutableList<String>?,
+    var location: String?
     // var isSold: Boolean,
     // var soldDate: String?
 ) : Serializable

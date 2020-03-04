@@ -20,9 +20,9 @@ class Repository(private val estateDao: EstateDao) {
 
     fun getFiltered(minPrice: Int, maxPrice: Int,
                     minSurface: Int, maxSurface: Int,
-                    nbRooms: Int, type: String, points_of_interest: String)
+                    nbRooms: Int, type: String, points_of_interest: String, location: String)
             : LiveData<List<Estate>> {
-        return Transformations.map(estateDao.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest)) { livedata ->
+        return Transformations.map(estateDao.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest, location)) { livedata ->
             livedata
         }
     }
