@@ -20,5 +20,5 @@ fun String.toSquare() : String {
 // Returns a string with separated thousands
 fun String.toThousand() : String {
     val value = this.toInt()
-    return String.format("%,d".format(value), this)
+    return String.format("%,d".format(value) + " $", this)
 }
