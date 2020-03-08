@@ -1,8 +1,11 @@
 package com.neandril.realestatemanager.database
 
+import android.database.sqlite.SQLiteQuery
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.neandril.realestatemanager.models.Estate
 import kotlin.math.max
 
@@ -22,8 +25,8 @@ class Repository(private val estateDao: EstateDao) {
 
     fun getFiltered(minPrice: Int, maxPrice: Int,
                     minSurface: Int, maxSurface: Int,
-                    nbRooms: Int, nbPhotos: Int, type: String, points_of_interest: String, location: String,
-                    isSold: Boolean)
+                    nbRooms: Int, type: String, points_of_interest: String, location: String,
+                    isSold: Boolean, displayOnlyPhotos: Boolean)
             : LiveData<List<Estate>> {
 
         val builder = StringBuilder("SELECT * FROM real_estate_table WHERE ")
@@ -64,7 +67,7 @@ class Repository(private val estateDao: EstateDao) {
                         }
                     }
                 }
-                points_of_interest.split(",").size  == 1 -> builder.append(" AND (points_of_interest LIKE \"%$points_of_interest\"%") // List contains one item
+                points_of_interest.split(",").size  == 1 -> builder.append(" AND (points_of_interest LIKE \"%$points_of_interest%\"") // List contains one item
             }
             builder.append(")")
         }
@@ -79,14 +82,22 @@ class Repository(private val estateDao: EstateDao) {
             builder.append(" AND (sold LIKE 1)")
         }
 
+        // Only with photos
+        if (displayOnlyPhotos) {
+            builder.append(" AND (estatePhotos > 0)")
+        }
 
         builder.toString()
 
         Log.d("Builder", "Str: $builder")
 
-        return Transformations.map(estateDao.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, nbPhotos, type, points_of_interest, location, isSold)) { livedata ->
+/*        return Transformations.map(estateDao.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest, location, isSold, displayOnlyPhotos)) { livedata ->
+            livedata*/
+
+        return Transformations.map(estateDao.getFiltered(SimpleSQLiteQuery(builder.toString()))) { livedata ->
             livedata
         }
+
     }
 
     // suspend fun getMaxPrice(): Int = estateDao.getMaxPrice()

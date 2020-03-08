@@ -102,13 +102,12 @@ class FilterFragment : BottomSheetDialogFragment() {
         val btnCancel = view.findViewById<TextView>(R.id.textView_cancel)
         val btnResetAll = view.findViewById<TextView>(R.id.textView_restalAll)
         val editTextRooms = view.findViewById<EditText>(R.id.edittext_filter_rooms)
-        val editTextPhotos = view.findViewById<EditText>(R.id.edittext_filter_photos)
         val editTextLocality = view.findViewById<EditText>(R.id.edittext_filter_locality)
         val cbIsSold = view.findViewById<CheckBox>(R.id.checkbox_isSold)
+        val cbPhotos = view.findViewById<CheckBox>(R.id.checkbox_photos)
 
         btnOk.setOnClickListener {
             val filterRooms = if (!editTextRooms.text.isNullOrEmpty()) editTextRooms.text.toString().toInt() else 0
-            val filterPhotos = if (!editTextPhotos.text.isNullOrEmpty()) editTextPhotos.text.toString().toInt() else 0
             val filterLocality = if (!editTextLocality.text.isNullOrEmpty()) getString(R.string.filter_locality_format, editTextLocality.text.toString()) else getString(R.string.null_or_empty)
             val minPrice = seekbarPrice.selectedMinValue.toInt()
             val maxPrice = seekbarPrice.selectedMaxValue.toInt()
@@ -117,8 +116,8 @@ class FilterFragment : BottomSheetDialogFragment() {
 
             buildRequest(FilterModel(
                 minPrice, maxPrice, minSurface, maxSurface,
-                filterRooms, filterPhotos,
-                getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois), filterLocality, cbIsSold.isChecked))
+                filterRooms,
+                getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois), filterLocality, cbIsSold.isChecked, cbPhotos.isChecked))
 
             dialog?.dismiss()
         }
@@ -193,8 +192,8 @@ class FilterFragment : BottomSheetDialogFragment() {
         estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
 
         estateViewModel.getFiltered(filter.minPrice, filter.maxPrice, filter.minSurface, filter.maxSurface,
-            filter.nbRooms?: 0, filter.nbPhotos?: 0, type, pointsOfInterest, filter.location?: "",
-            filter.isSold
+            filter.nbRooms?: 0, type, pointsOfInterest, filter.location?: "",
+            filter.isSold, filter.displayOnlyPhotos
         ).observe(viewLifecycleOwner, Observer {estates ->
             Log.d("FromViewModel", "request: " + estates.size)
 
@@ -203,10 +202,13 @@ class FilterFragment : BottomSheetDialogFragment() {
             recyclerView?.adapter = adapter
             recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
 
-            adapter.setEstate(
+            estates.let {
+                adapter.setEstate(it)
+            }
+/*            adapter.setEstate(
             estates.filter {
                 it.estatePhotos?.size?: 0 > 1
-            })
+            })*/
         })
     }
 }
