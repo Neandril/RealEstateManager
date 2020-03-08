@@ -49,8 +49,6 @@ class FragmentMain : BaseFragment() {
         } else {
             Log.d("onResume", "allEstate: false")
         }
-
-
         configureRecyclerView()
     }
 }

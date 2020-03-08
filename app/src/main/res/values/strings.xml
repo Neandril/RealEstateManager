@@ -52,6 +52,7 @@
     <string name="filter_locality">Location (city, state or province)</string>
     <string name="filter_include_sold">Include estates sold ?</string>
     <string name="filter_locality_format">%%%1$s%%</string>
+    <string name="null_or_empty">%%</string>
 
     <!-- DIALOGS STRINGS -->
     <string name="dialog_ok">OK</string>

@@ -37,6 +37,8 @@ class FilterFragment : BottomSheetDialogFragment() {
     private lateinit var chipGroupTypes: ChipGroup
     private lateinit var chipGroupPois: ChipGroup
 
+    private var filter: FilterModel? = null
+
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
 
     override fun onCreateView(
@@ -59,6 +61,13 @@ class FilterFragment : BottomSheetDialogFragment() {
             viewGroupLayoutParams.height = newHeight ?: 0
             bottomSheet.layoutParams = viewGroupLayoutParams*/
         }
+
+        if (filter != null) {
+            Log.d("Filter", "Filter: not null")
+        } else {
+            Log.d("Filter", "Filter: null")
+        }
+
 
         configureSeekbars(root)
         configureChips(root)
@@ -98,22 +107,18 @@ class FilterFragment : BottomSheetDialogFragment() {
         val cbIsSold = view.findViewById<CheckBox>(R.id.checkbox_isSold)
 
         btnOk.setOnClickListener {
-            Log.d("FilterFragment", "Clicked on: OK")
-
-            val filterRooms = if (!editTextRooms.text.isNullOrEmpty()) editTextRooms.text.toString().toInt() else null
-            val filterPhotos = if (!editTextPhotos.text.isNullOrEmpty()) editTextPhotos.text.toString().toInt() else null
-            val filterLocality = if (!editTextLocality.text.isNullOrEmpty()) getString(R.string.filter_locality_format, editTextLocality.text.toString()) else null
+            val filterRooms = if (!editTextRooms.text.isNullOrEmpty()) editTextRooms.text.toString().toInt() else 0
+            val filterPhotos = if (!editTextPhotos.text.isNullOrEmpty()) editTextPhotos.text.toString().toInt() else 0
+            val filterLocality = if (!editTextLocality.text.isNullOrEmpty()) getString(R.string.filter_locality_format, editTextLocality.text.toString()) else getString(R.string.null_or_empty)
             val minPrice = seekbarPrice.selectedMinValue.toInt()
             val maxPrice = seekbarPrice.selectedMaxValue.toInt()
             val minSurface = seekbarSurface.selectedMinValue.toInt()
             val maxSurface = seekbarSurface.selectedMaxValue.toInt()
 
-            val filtered = FilterModel(
+            buildRequest(FilterModel(
                 minPrice, maxPrice, minSurface, maxSurface,
-                filterRooms,
-                getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois), filterLocality)
-
-            buildRequest(filtered)
+                filterRooms, filterPhotos,
+                getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois), filterLocality, cbIsSold.isChecked))
 
             dialog?.dismiss()
         }
@@ -176,8 +181,8 @@ class FilterFragment : BottomSheetDialogFragment() {
     }
 
     private fun buildRequest(filter: FilterModel) {
-        val type = filter.estateType?.joinToString(",","%", "%") ?: ""
-        val pointsOfInterest = filter.estatePois?.joinToString(",","%", "%") ?: ""
+        val type = filter.estateType?.joinToString(",","", "") ?: ""
+        val pointsOfInterest = filter.estatePois?.joinToString(",","", "") ?: ""
 
         Log.d("Filtered", "Filter: price range: " + filter.minPrice + " - " + filter.maxPrice + "\n" +
                 "surface range: " + filter.minSurface + " - " + filter.maxSurface + "\n" +
@@ -186,18 +191,22 @@ class FilterFragment : BottomSheetDialogFragment() {
                 "locality: " + filter.location)
 
         estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
+
         estateViewModel.getFiltered(filter.minPrice, filter.maxPrice, filter.minSurface, filter.maxSurface,
-            filter.nbRooms?: 0, type, pointsOfInterest, filter.location?: ""
-        ).observe(viewLifecycleOwner, Observer {
-            Log.d("FromViewModel", "request: " + it.size)
+            filter.nbRooms?: 0, filter.nbPhotos?: 0, type, pointsOfInterest, filter.location?: "",
+            filter.isSold
+        ).observe(viewLifecycleOwner, Observer {estates ->
+            Log.d("FromViewModel", "request: " + estates.size)
 
             val recyclerView = activity?.findViewById<RecyclerView>(R.id.recyclerview)
             val adapter = MainRecyclerViewAdapter(activity?.applicationContext!!)
             recyclerView?.adapter = adapter
             recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
 
-            it.let { adapter.setEstate(it) }
+            adapter.setEstate(
+            estates.filter {
+                it.estatePhotos?.size?: 0 > 1
+            })
         })
-
     }
 }

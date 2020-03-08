@@ -22,10 +22,10 @@ interface EstateDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateEstate(estate: Estate)
 
-    @Query("""SELECT * FROM real_estate_table WHERE price BETWEEN :minPrice AND :maxPrice AND surface BETWEEN :minSurface AND :maxSurface AND nbTotalRooms > :nbRooms AND type LIKE :type AND points_of_interest LIKE :points_of_interest AND address LIKE :location""")
+    @Query("""SELECT * FROM real_estate_table WHERE (price BETWEEN :minPrice AND :maxPrice) AND (surface BETWEEN :minSurface AND :maxSurface) AND (nbTotalRooms > :nbRooms) AND (type LIKE :type) AND points_of_interest LIKE :points_of_interest AND address LIKE :location AND (estatePhotos > :nbPhotos) AND (sold = :isSold)""")
     fun getFiltered(minPrice: Int, maxPrice: Int,
                     minSurface: Int, maxSurface: Int,
-                    nbRooms: Int, type: String, points_of_interest: String, location: String): LiveData<List<Estate>>
+                    nbRooms: Int, nbPhotos: Int, type: String, points_of_interest: String, location: String, isSold: Boolean): LiveData<List<Estate>>
 
 /*    @Query("SELECT * FROM real_estate_table WHERE price = (SELECT MAX(price) FROM real_estate_table)")
     suspend fun getMaxPrice(): Int*/

@@ -1,5 +1,6 @@
 package com.neandril.realestatemanager.views.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -17,6 +18,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -25,6 +28,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.utils.toSquare
@@ -32,6 +41,7 @@ import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.base.BaseActivity
 import kotlinx.android.synthetic.main.custom_map_icon.view.*
+import java.util.*
 
 class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -39,12 +49,21 @@ class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
 
     private lateinit var toolbar: Toolbar
     private lateinit var mMap: GoogleMap
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+    private var position: String = ""
+
+
     private var estateList: MutableList<Estate> = mutableListOf()
 
     companion object {
         const val ESTATE_ID = "id_estate"
     }
 
+    // ***************************
+    // BASE METHODS
+    // ***************************
     override fun getActivityLayout(): Int {
         return R.layout.activity_map_view
     }
@@ -57,6 +76,7 @@ class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(this))
         val mMapFragment = this.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mMapFragment?.getMapAsync(this)
 
@@ -78,9 +98,9 @@ class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
 
                 val markerOptions = MarkerOptions()
                 if (it.sold) {
-                    markerOptions.position(latLng).title("Title").snippet("Snippet").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    markerOptions.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                 } else {
-                    markerOptions.position(latLng).title("Title").snippet("Snippet").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    markerOptions.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 }
 
                 val marker = mMap.addMarker(markerOptions)
@@ -91,10 +111,18 @@ class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
         return estateList
     }
 
+    override fun onResume() {
+        super.onResume()
+        getPermissions()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val fakePos = LatLng(40.765005, -73.980480)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fakePos, 15f))
+        // val fakePos = LatLng(40.765005, -73.980480)
+        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fakePos, 15f))
+        mMap.uiSettings.isCompassEnabled = false
+        mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.isMyLocationEnabled = true
 
         getEstates()
 
@@ -113,9 +141,54 @@ class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
         } else {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
         }
-
     }
 
+    private fun getPermissions() {
+        Dexter
+            .withActivity(this)
+            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    getLastKnownLocation()
+
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+                    Log.e("Dexter", "Permission Rationale")
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    Log.e("Dexter", "Permission Denied")
+                }
+            })
+            .check()
+    }
+
+    private fun getLastKnownLocation() {
+        mFusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                latitude = location.latitude
+                longitude = location.longitude
+                val latLng = LatLng(latitude, longitude)
+                position = "$latitude,$longitude"
+
+                cameraUpdate(latLng)
+            } else {
+                Toast.makeText(this,"Error retrieving location", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun cameraUpdate(latLng: LatLng) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+    }
+
+    // ***************************
+    // ADAPTER FOR CUSTOM INFO
+    // ***************************
     internal inner class CustomInfoAdapter : GoogleMap.InfoWindowAdapter {
 
         @SuppressLint("InflateParams")
@@ -124,7 +197,7 @@ class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
 
             val estate: Estate? = marker?.tag as Estate?
 
-            if (estate?.estatePhotos != null) {
+            /*if (estate?.estatePhotos != null) {
                 val uri = estate.estatePhotos[0].image.toUri()
 
                 Glide.with(mInfoView)
@@ -158,7 +231,7 @@ class MapViewActivity : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWind
 
                     })
                     .into(mInfoView.map_estate_marker_picture)
-            }
+            }*/
 
             mInfoView.map_estate_marker_title.text = estate?.type
             mInfoView.map_estate_marker_price.text = getString(R.string.custom_map_price_and_surface,

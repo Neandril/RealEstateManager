@@ -15,7 +15,6 @@
         class="com.google.android.gms.maps.SupportMapFragment"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/std_margin" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
