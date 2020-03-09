@@ -121,7 +121,7 @@ class MainActivity : BaseActivity() {
         val myListAdapter = MyListAdapter(this, listItems, listIcons)
         listview.adapter = myListAdapter
 
-        listview.setOnItemClickListener(){adapterView, _, position, _ ->
+        listview.setOnItemClickListener{adapterView, _, position, _ ->
 
             when (adapterView.getItemIdAtPosition(position).toInt()) {
                 0 -> {

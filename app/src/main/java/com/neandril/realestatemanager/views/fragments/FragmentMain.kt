@@ -1,12 +1,13 @@
 package com.neandril.realestatemanager.views.fragments
 
-import android.content.Context
+
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.neandril.realestatemanager.R
+import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.models.FilterModel
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.adapters.MainRecyclerViewAdapter
