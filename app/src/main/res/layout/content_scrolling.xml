@@ -228,23 +228,12 @@
                         android:hint="@string/estate_address_hint"
                         android:importantForAutofill="no"
                         android:textAlignment="center"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:layout_constraintTop_toBottomOf="@id/textView_address_title"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/btn_add_address"
-                        app:layout_constraintHorizontal_weight="9.5"/>
-
-                    <ImageButton
-                        android:id="@+id/btn_add_address"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/std_margin"
-                        android:background="@color/transparent"
-                        android:src="@drawable/ic_add_location"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/textView_address"
-                        app:layout_constraintTop_toBottomOf="@id/textView_address_title"
-                        app:layout_constraintHorizontal_weight=".5"
-                        android:contentDescription="@string/estate_address" />
+                        app:layout_constraintHorizontal_weight="9.5"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

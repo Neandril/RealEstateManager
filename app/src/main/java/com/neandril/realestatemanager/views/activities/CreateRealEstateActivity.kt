@@ -45,6 +45,7 @@ import com.neandril.realestatemanager.BuildConfig
 import com.neandril.realestatemanager.R
 import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.models.Thumbnail
+import com.neandril.realestatemanager.utils.Utils
 import com.neandril.realestatemanager.utils.paddingZero
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.views.adapters.ImagesRecyclerViewAdapter
@@ -81,7 +82,6 @@ class CreateRealEstateActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var nbBedRoomsEditText: EditText
     private lateinit var nbOtherRoomsEditText: EditText
     private lateinit var btnPhoto: ImageButton
-    private lateinit var btnAddAddress: ImageButton
     private lateinit var agentNameEditText: EditText
     private lateinit var cbStatus: CheckBox
     private lateinit var soldDateTextView: TextView
@@ -122,7 +122,7 @@ class CreateRealEstateActivity : BaseActivity(), OnMapReadyCallback {
         this.configureSpinner()
         this.configureSoldDate()
         this.buttonPhotoClick()
-        this.buttonAddAddressClick()
+        this.addressOnClick()
     }
 
     // ***************************
@@ -148,7 +148,6 @@ class CreateRealEstateActivity : BaseActivity(), OnMapReadyCallback {
         nbBedRoomsEditText = findViewById(R.id.edittext_nb_bedroom)
         nbOtherRoomsEditText = findViewById(R.id.edittext_nb_rooms)
         btnPhoto = findViewById(R.id.btn_estate_photo)
-        btnAddAddress = findViewById(R.id.btn_add_address)
         agentNameEditText = findViewById(R.id.agentName_editText)
         cbStatus = findViewById(R.id.cb_status)
         soldDateTextView = findViewById(R.id.textView_soldDate)
@@ -272,24 +271,28 @@ class CreateRealEstateActivity : BaseActivity(), OnMapReadyCallback {
         })
     }
 
-    private fun buttonAddAddressClick() {
-        btnAddAddress.setOnClickListener {
-            // Initialize map api
-            Places.initialize(this, apikey)
+    private fun addressOnClick() {
+        addressTextView.setOnClickListener {
+            if (Utils.isInternetAvailable(this)) {
+                // Initialize map api
+                Places.initialize(this, apikey)
 
-            val fields = listOf(
-                Place.Field.ID,
-                Place.Field.ADDRESS,
-                Place.Field.ADDRESS_COMPONENTS,
-                Place.Field.LAT_LNG
-            )
+                val fields = listOf(
+                    Place.Field.ID,
+                    Place.Field.ADDRESS,
+                    Place.Field.ADDRESS_COMPONENTS,
+                    Place.Field.LAT_LNG
+                )
 
-            // Start the autocomplete intent.
-            val intent = Autocomplete.IntentBuilder(
-                AutocompleteActivityMode.FULLSCREEN, fields
-            ).setCountry("US").setTypeFilter(TypeFilter.ADDRESS)
-                .build(this)
-            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+                // Start the autocomplete intent.
+                val intent = Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.FULLSCREEN, fields
+                ).setCountry("US").setTypeFilter(TypeFilter.ADDRESS)
+                    .build(this)
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+            } else {
+                Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
