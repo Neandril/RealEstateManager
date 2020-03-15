@@ -10,6 +10,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,11 +27,13 @@ import com.neandril.realestatemanager.models.FilterModel
 import com.neandril.realestatemanager.utils.toSquare
 import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
+import com.neandril.realestatemanager.viewmodels.FilterInteractionViewModel
 import com.neandril.realestatemanager.views.adapters.MainRecyclerViewAdapter
 
 class FilterFragment : BottomSheetDialogFragment() {
 
     private lateinit var estateViewModel: EstateViewModel
+    private val filterInteraction: FilterInteractionViewModel by activityViewModels()
 
     private lateinit var seekbarPrice: CrystalRangeSeekbar
     private lateinit var seekbarSurface: CrystalRangeSeekbar
@@ -114,10 +117,11 @@ class FilterFragment : BottomSheetDialogFragment() {
             val minSurface = seekbarSurface.selectedMinValue.toInt()
             val maxSurface = seekbarSurface.selectedMaxValue.toInt()
 
-            buildRequest(FilterModel(
-                minPrice, maxPrice, minSurface, maxSurface,
-                filterRooms,
-                getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois), filterLocality, cbIsSold.isChecked, cbPhotos.isChecked))
+            val filter = FilterModel(minPrice, maxPrice, minSurface, maxSurface,
+                filterRooms, getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois),
+                filterLocality, cbIsSold.isChecked, cbPhotos.isChecked)
+
+            filterInteraction.setFilter(filter)
 
             dialog?.dismiss()
         }
@@ -177,38 +181,5 @@ class FilterFragment : BottomSheetDialogFragment() {
             maxValue = it.price.toFloat()
             Log.d("MaxPrice", "MaxPrice: " + it.price)
         })*/
-    }
-
-    private fun buildRequest(filter: FilterModel) {
-        val type = filter.estateType?.joinToString(",","", "") ?: ""
-        val pointsOfInterest = filter.estatePois?.joinToString(",","", "") ?: ""
-
-        Log.d("Filtered", "Filter: price range: " + filter.minPrice + " - " + filter.maxPrice + "\n" +
-                "surface range: " + filter.minSurface + " - " + filter.maxSurface + "\n" +
-                "rooms: " + filter.nbRooms + ", type: " + type + "\n" +
-                "points of interest: " + pointsOfInterest + "\n" +
-                "locality: " + filter.location)
-
-        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-
-        estateViewModel.getFiltered(filter.minPrice, filter.maxPrice, filter.minSurface, filter.maxSurface,
-            filter.nbRooms?: 0, type, pointsOfInterest, filter.location?: "",
-            filter.isSold, filter.displayOnlyPhotos
-        ).observe(viewLifecycleOwner, Observer {estates ->
-            Log.d("FromViewModel", "request: " + estates.size)
-
-            val recyclerView = activity?.findViewById<RecyclerView>(R.id.recyclerview)
-            val adapter = MainRecyclerViewAdapter(activity?.applicationContext!!)
-            recyclerView?.adapter = adapter
-            recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
-
-            estates.let {
-                adapter.setEstate(it)
-            }
-/*            adapter.setEstate(
-            estates.filter {
-                it.estatePhotos?.size?: 0 > 1
-            })*/
-        })
     }
 }

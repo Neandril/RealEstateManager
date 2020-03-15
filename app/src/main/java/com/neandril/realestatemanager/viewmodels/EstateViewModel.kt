@@ -35,8 +35,10 @@ class EstateViewModel(application: Application) : AndroidViewModel(application) 
     fun getFiltered(minPrice: Int, maxPrice: Int,
                     minSurface: Int, maxSurface: Int,
                     nbRooms: Int, type: String, points_of_interest: String, location: String,
-                    isSold: Boolean, displayOnlyPhotos: Boolean)
-            = repository.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest, location, isSold, displayOnlyPhotos)
+                    isSold: Boolean, displayOnlyPhotos: Boolean): LiveData<List<Estate>> {
+
+        return repository.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest, location, isSold, displayOnlyPhotos)
+    }
 
 /*    fun getMaxPrice() = viewModelScope.launch {
         repository.getMaxPrice()

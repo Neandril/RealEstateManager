@@ -63,7 +63,7 @@ class Repository(private val estateDao: EstateDao) {
                     for (i in points_of_interest.split(",").indices) {
                         builder.append("\"%${points_of_interest.split(",")[i]}%\"")
                         if (i < points_of_interest.split(",").size -1) {
-                            builder.append(" AND points_of_interest LIKE ")
+                            builder.append(" OR points_of_interest LIKE ")
                         }
                     }
                 }
@@ -97,7 +97,6 @@ class Repository(private val estateDao: EstateDao) {
         return Transformations.map(estateDao.getFiltered(SimpleSQLiteQuery(builder.toString()))) { livedata ->
             livedata
         }
-
     }
 
     // suspend fun getMaxPrice(): Int = estateDao.getMaxPrice()
