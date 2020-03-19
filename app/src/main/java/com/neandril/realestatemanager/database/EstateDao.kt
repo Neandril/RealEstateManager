@@ -27,6 +27,9 @@ interface EstateDao {
     @RawQuery(observedEntities = [Estate::class])
     fun getFiltered(query: SupportSQLiteQuery) : LiveData<List<Estate>>
 
-/*    @Query("SELECT * FROM real_estate_table WHERE price = (SELECT MAX(price) FROM real_estate_table)")
-    suspend fun getMaxPrice(): Int*/
+    @Query("SELECT * FROM real_estate_table ORDER BY price DESC")
+    fun getEstateByPrice(): LiveData<List<Estate>>
+
+    @Query("SELECT * FROM real_estate_table ORDER BY surface DESC")
+    fun getEstateBySurface(): LiveData<List<Estate>>
 }

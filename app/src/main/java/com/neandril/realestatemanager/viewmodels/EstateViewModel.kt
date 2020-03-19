@@ -21,6 +21,10 @@ class EstateViewModel(application: Application) : AndroidViewModel(application) 
         allEstates = repository.allEstates
     }
 
+    fun estateByPrice(): LiveData<List<Estate>> = repository.getEstateByPrice
+
+    fun estateBySurface(): LiveData<List<Estate>> = repository.getEstateBySurface
+
     fun insert(estate: Estate) = viewModelScope.launch {
         repository.insert(estate)
     }
@@ -31,16 +35,13 @@ class EstateViewModel(application: Application) : AndroidViewModel(application) 
         repository.updateEstate(estate)
     }
 
-
     fun getFiltered(minPrice: Int, maxPrice: Int,
                     minSurface: Int, maxSurface: Int,
                     nbRooms: Int, type: String, points_of_interest: String, location: String,
-                    isSold: Boolean, displayOnlyPhotos: Boolean): LiveData<List<Estate>> {
+                    isSold: Boolean, displayOnlyPhotos: Boolean) : LiveData<List<Estate>> {
 
         return repository.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest, location, isSold, displayOnlyPhotos)
+
     }
 
-/*    fun getMaxPrice() = viewModelScope.launch {
-        repository.getMaxPrice()
-    }*/
 }

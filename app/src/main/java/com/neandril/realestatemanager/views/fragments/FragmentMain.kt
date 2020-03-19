@@ -3,7 +3,6 @@ package com.neandril.realestatemanager.views.fragments
 
 import android.util.Log
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +17,7 @@ import com.neandril.realestatemanager.views.base.BaseFragment
 
 class FragmentMain : BaseFragment() {
 
-    private val estateViewModel: EstateViewModel by viewModels()
+    private lateinit var estateViewModel: EstateViewModel
     private val filterInteraction: FilterInteractionViewModel by activityViewModels()
 
     // ***************************
@@ -39,6 +38,7 @@ class FragmentMain : BaseFragment() {
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
 
+        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
         estateViewModel.allEstates.observe(this, Observer { estates ->
             estates.let { adapter.setEstate(it) }
         })
@@ -48,23 +48,22 @@ class FragmentMain : BaseFragment() {
         super.onResume()
 
         filterInteraction.observeFilter().observe(this, Observer {
-            buildRequest(it)
+            if (it != null) {
+                buildRequest(it)
+            }
         })
 
 /*        val filter = bundle?.getSerializable("FILTER") as FilterModel
         Log.d("onResume", "Filter: " + filter.minSurface + " - " + filter.maxSurface)*/
 
-        if (estateViewModel.allEstates.hasObservers()) {
-            Log.d("onResume", "allEstate: true")
-        } else {
-            Log.d("onResume", "allEstate: false")
-        }
         configureRecyclerView()
     }
 
     private fun buildRequest(filter: FilterModel) {
         val type = filter.estateType?.joinToString(",","", "") ?: ""
         val pointsOfInterest = filter.estatePois?.joinToString(",","", "") ?: ""
+
+        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
 
         estateViewModel.getFiltered(filter.minPrice, filter.maxPrice, filter.minSurface, filter.maxSurface,
             filter.nbRooms?: 0, type, pointsOfInterest, filter.location?: "",
@@ -79,6 +78,10 @@ class FragmentMain : BaseFragment() {
             estates.let {
                 adapter.setEstate(it)
             }
+/*            adapter.setEstate(
+            estates.filter {
+                it.estatePhotos?.size?: 0 > 1
+            })*/
         })
     }
 }

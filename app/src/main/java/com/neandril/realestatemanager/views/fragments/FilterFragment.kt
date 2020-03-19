@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +26,8 @@ import com.neandril.realestatemanager.utils.toThousand
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.viewmodels.FilterInteractionViewModel
 import com.neandril.realestatemanager.views.adapters.MainRecyclerViewAdapter
+import kotlinx.android.synthetic.main.fragment_filter.*
+import org.w3c.dom.Text
 
 class FilterFragment : BottomSheetDialogFragment() {
 
@@ -39,8 +38,19 @@ class FilterFragment : BottomSheetDialogFragment() {
     private lateinit var seekbarSurface: CrystalRangeSeekbar
     private lateinit var chipGroupTypes: ChipGroup
     private lateinit var chipGroupPois: ChipGroup
+    private lateinit var tvMinPrice: TextView
+    private lateinit var tvMaxPrice: TextView
+    private lateinit var tvMinSurface: TextView
+    private lateinit var tvMaxSurface: TextView
+    private lateinit var btnOk: TextView
+    private lateinit var btnCancel: TextView
+    private lateinit var btnResetAll: TextView
+    private lateinit var editTextRooms: EditText
+    private lateinit var editTextLocality: EditText
+    private lateinit var cbIsSold: CheckBox
+    private lateinit var cbPhotos: CheckBox
 
-    private var filter: FilterModel? = null
+    private var maxPrice: Float = 0f
 
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
 
@@ -53,61 +63,85 @@ class FilterFragment : BottomSheetDialogFragment() {
 
         root.viewTreeObserver.addOnGlobalLayoutListener {
             val dialog = dialog as BottomSheetDialog
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
-/*            val behavior = BottomSheetBehavior.from(bottomSheet!!)
-            behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED*/
             dialog.setCancelable(false)
 
-            // Make the bottom sheet to fill the half of the screen (div by 2)
-/*            val newHeight = activity?.window?.decorView?.measuredHeight
-            val viewGroupLayoutParams = bottomSheet.layoutParams
-            viewGroupLayoutParams.height = newHeight ?: 0
-            bottomSheet.layoutParams = viewGroupLayoutParams*/
         }
 
-        if (filter != null) {
-            Log.d("Filter", "Filter: not null")
-        } else {
-            Log.d("Filter", "Filter: null")
-        }
-
+        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
 
         configureSeekbars(root)
         configureChips(root)
         configureButtonsClicks(root)
 
+        filterInteraction.getFilter().observe(viewLifecycleOwner, Observer {
+            fillFragment(it)
+        })
+
         return root
+    }
+
+    private fun fillFragment(filterModel: FilterModel?) {
+        if (filterModel != null) {
+            Log.d("Filter", "minProce: " + filterModel.minPrice + ", maxPrice: " + filterModel.maxPrice)
+            tvMinPrice.text = filterModel.minPrice.toString()
+            tvMaxPrice.text = filterModel.maxPrice.toString()
+            tvMinSurface.text = filterModel.minSurface.toString()
+            tvMaxSurface.text = filterModel.maxSurface.toString()
+
+            if (filterModel.nbRooms != 0) editTextRooms.setText(filterModel.nbRooms.toString()) else editTextRooms.setText("")
+            if (filterModel.location != "") editTextLocality.setText(filterModel.location.toString()) else editTextLocality.setText("")
+
+            cbIsSold.isChecked = filterModel.isSold
+            cbPhotos.isChecked = filterModel.displayOnlyPhotos
+
+            for (i in 0 until chipGroupTypes.childCount) {
+                val chip = chipGroupTypes.getChildAt(i) as Chip
+                filterModel.estateType?.forEach {
+                    if (it == chip.text) { chip.isChecked = true }
+                }
+            }
+            for (i in 0 until chipGroupPois.childCount) {
+                val chip = chipGroupPois.getChildAt(i) as Chip
+                filterModel.estatePois ?.forEach {
+                    if (it == chip.text) { chip.isChecked = true }
+                }
+            }
+        }
     }
 
     private fun configureSeekbars(view: View) {
         seekbarPrice = view.findViewById(R.id.seekbar_price)
         seekbarSurface = view.findViewById(R.id.seekbar_surface)
-        val tvMinPrice = view.findViewById<TextView>(R.id.textview_filter_min_price)
-        val tvMaxPrice = view.findViewById<TextView>(R.id.textview_filter_max_price)
-        val tvMinSurface = view.findViewById<TextView>(R.id.textview_filter_min_surface)
-        val tvMaxSurface = view.findViewById<TextView>(R.id.textview_filter_max_surface)
+        tvMinPrice = view.findViewById(R.id.textview_filter_min_price)
+        tvMaxPrice = view.findViewById(R.id.textview_filter_max_price)
+        tvMinSurface = view.findViewById(R.id.textview_filter_min_surface)
+        tvMaxSurface = view.findViewById(R.id.textview_filter_max_surface)
 
-        seekbarPrice.setMaxValue(140000000F)
-        seekbarPrice.setOnRangeSeekbarChangeListener { minValue, maxValue ->
-            tvMinPrice.text = minValue.toString().toThousand()
-            tvMaxPrice.text = maxValue.toString().toThousand()
-        }
+        estateViewModel.estateByPrice().observe(viewLifecycleOwner, Observer {
+            seekbarPrice.setMaxValue(it[0].price.toFloat())
+            seekbarPrice.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+                tvMinPrice.text = minValue.toString().toThousand()
+                tvMaxPrice.text = maxValue.toString().toThousand()
+            }
+        })
 
-        seekbarSurface.setMaxValue(1000F)
-        seekbarSurface.setOnRangeSeekbarChangeListener { minValue, maxValue ->
-            tvMinSurface.text = minValue.toString().toSquare()
-            tvMaxSurface.text = maxValue.toString().toSquare()
-        }
+        estateViewModel.estateBySurface().observe(viewLifecycleOwner, Observer {
+            seekbarSurface.setMaxValue(it[0].surface.toFloat())
+            seekbarSurface.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+                tvMinSurface.text = minValue.toString().toSquare()
+                tvMaxSurface.text = maxValue.toString().toSquare()
+            }
+        })
     }
 
     private fun configureButtonsClicks(view: View) {
-        val btnOk = view.findViewById<TextView>(R.id.textView_btnOk)
-        val btnCancel = view.findViewById<TextView>(R.id.textView_cancel)
-        val btnResetAll = view.findViewById<TextView>(R.id.textView_restalAll)
-        val editTextRooms = view.findViewById<EditText>(R.id.edittext_filter_rooms)
-        val editTextLocality = view.findViewById<EditText>(R.id.edittext_filter_locality)
-        val cbIsSold = view.findViewById<CheckBox>(R.id.checkbox_isSold)
-        val cbPhotos = view.findViewById<CheckBox>(R.id.checkbox_photos)
+        btnOk = view.findViewById(R.id.textView_btnOk)
+        btnCancel = view.findViewById(R.id.textView_cancel)
+        btnResetAll = view.findViewById(R.id.textView_restalAll)
+        editTextRooms = view.findViewById(R.id.edittext_filter_rooms)
+        editTextLocality = view.findViewById(R.id.edittext_filter_locality)
+        cbIsSold = view.findViewById(R.id.checkbox_isSold)
+        cbPhotos = view.findViewById(R.id.checkbox_photos)
 
         btnOk.setOnClickListener {
             val filterRooms = if (!editTextRooms.text.isNullOrEmpty()) editTextRooms.text.toString().toInt() else 0
@@ -134,6 +168,12 @@ class FilterFragment : BottomSheetDialogFragment() {
 
         btnResetAll.setOnClickListener {
             Log.d("FilterFragment", "Clicked on: Reset all")
+            val filter: FilterModel? = null
+            if (filter != null) {
+                filterInteraction.setFilter(filter)
+            }
+
+            dialog?.dismiss()
         }
     }
 
@@ -173,13 +213,5 @@ class FilterFragment : BottomSheetDialogFragment() {
         }
 
         return selectedChips
-    }
-
-    private fun getMaxPrice() {
-        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-/*        estateViewModel.getMaxPrice().observe(this, Observer {
-            maxValue = it.price.toFloat()
-            Log.d("MaxPrice", "MaxPrice: " + it.price)
-        })*/
     }
 }

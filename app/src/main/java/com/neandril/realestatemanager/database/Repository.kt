@@ -1,17 +1,18 @@
 package com.neandril.realestatemanager.database
 
-import android.database.sqlite.SQLiteQuery
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.neandril.realestatemanager.models.Estate
-import kotlin.math.max
 
 class Repository(private val estateDao: EstateDao) {
 
     val allEstates: LiveData<List<Estate>> = estateDao.getAllEstates()
+
+    val getEstateByPrice: LiveData<List<Estate>> = estateDao.getEstateByPrice()
+
+    val getEstateBySurface: LiveData<List<Estate>> = estateDao.getEstateBySurface()
 
     fun getSingleEstate(id: Int): LiveData<Estate> = estateDao.getSingleEstate(id)
 
@@ -98,6 +99,4 @@ class Repository(private val estateDao: EstateDao) {
             livedata
         }
     }
-
-    // suspend fun getMaxPrice(): Int = estateDao.getMaxPrice()
 }
