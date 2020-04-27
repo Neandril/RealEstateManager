@@ -1,34 +1,38 @@
 package com.neandril.realestatemanager.database
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.neandril.realestatemanager.models.Estate
 
 class Repository(private val estateDao: EstateDao) {
 
-    val allEstates: LiveData<List<Estate>> = estateDao.getAllEstates()
-
     val getEstateByPrice: LiveData<List<Estate>> = estateDao.getEstateByPrice()
-
     val getEstateBySurface: LiveData<List<Estate>> = estateDao.getEstateBySurface()
 
+    // Get a single estate
     fun getSingleEstate(id: Int): LiveData<Estate> = estateDao.getSingleEstate(id)
 
+    // Get list of all Estates
+    suspend fun getAllEstate() : List<Estate> {
+        return estateDao.getAllEstates()
+    }
+
+    // Insert an estate
     suspend fun insert(estate: Estate) {
         estateDao.insert(estate)
     }
 
+    // Update an estate
     suspend fun updateEstate(estate: Estate) {
         estateDao.updateEstate(estate)
     }
 
-    fun getFiltered(minPrice: Int, maxPrice: Int,
+    // Get a list of filtered estate. The filter is built here
+    suspend fun getFiltered(minPrice: Int, maxPrice: Int,
                     minSurface: Int, maxSurface: Int,
                     nbRooms: Int, type: String, points_of_interest: String, location: String,
                     isSold: Boolean, displayOnlyPhotos: Boolean)
-            : LiveData<List<Estate>> {
+            : List<Estate> {
 
         val builder = StringBuilder("SELECT * FROM real_estate_table WHERE ")
 
@@ -75,7 +79,7 @@ class Repository(private val estateDao: EstateDao) {
 
         // Location
         if (location.isNotEmpty()) {
-            builder.append(" AND (address LIKE \"$location\")")
+            builder.append(" AND (address LIKE \"%$location%\")")
         }
 
         // Is Sold
@@ -88,15 +92,9 @@ class Repository(private val estateDao: EstateDao) {
             builder.append(" AND (estatePhotos > 0)")
         }
 
+        // Final query
         builder.toString()
 
-        Log.d("Builder", "Str: $builder")
-
-/*        return Transformations.map(estateDao.getFiltered(minPrice, maxPrice, minSurface, maxSurface, nbRooms, type, points_of_interest, location, isSold, displayOnlyPhotos)) { livedata ->
-            livedata*/
-
-        return Transformations.map(estateDao.getFiltered(SimpleSQLiteQuery(builder.toString()))) { livedata ->
-            livedata
-        }
+        return estateDao.getFiltered(SimpleSQLiteQuery(builder.toString()))
     }
 }

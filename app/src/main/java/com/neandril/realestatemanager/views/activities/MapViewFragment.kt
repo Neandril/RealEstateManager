@@ -83,7 +83,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnInfoWind
     // ***************************
     private fun getEstates() : MutableList<Estate> {
         estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-        estateViewModel.allEstates.observe(this, Observer { estates ->
+        estateViewModel.getEstates().observe(this, Observer { estates ->
             estates.forEach {
                 Log.d("MapView", "LatLng: " + it.addressLatLng)
                 estateList.add(it)
@@ -106,6 +106,8 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnInfoWind
 
             }
         })
+
+        estateViewModel.init()
         return estateList
     }
 

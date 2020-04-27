@@ -54,8 +54,6 @@
     <string name="filter_locality">Location (city, state or province)</string>
     <string name="filter_only_sold">Only display sold estates ?</string>
     <string name="filter_only_with_photos">Only display estates with photos ?</string>
-    <string name="filter_locality_format">%%%1$s%%</string>
-    <string name="null_or_empty">%%</string>
 
     <!-- DIALOGS STRINGS -->
     <string name="dialog_ok">OK</string>

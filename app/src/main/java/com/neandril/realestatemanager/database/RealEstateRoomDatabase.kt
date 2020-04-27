@@ -6,59 +6,42 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.google.android.gms.maps.model.LatLng
 import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.utils.Converters
-import com.neandril.realestatemanager.utils.toSquare
-import com.neandril.realestatemanager.utils.toThousand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
-import com.neandril.realestatemanager.models.Thumbnail
-
 
 @Database(entities = [Estate::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class RealEstateRoomDatabase : RoomDatabase() {
 
     abstract fun estateDao(): EstateDao
+}
 
-    companion object {
-        @Volatile
-        private var INSTANCE: RealEstateRoomDatabase? = null
+object DbFactory {
 
-        fun getDatabase(
-            context: Context,
-            scope: CoroutineScope
-        ) : RealEstateRoomDatabase {
+    fun getDatabase(
+        context: Context,
+        scope: CoroutineScope
+    ) : RealEstateRoomDatabase {
 
-            val tempInstance = INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
-            }
-
-            synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    RealEstateRoomDatabase::class.java,
-                    "estate_manager_database"
-                )
-                    .addCallback(EstateDatabaseCallback(scope))
-                    .build()
-                INSTANCE = instance
-                return instance
-            }
-        }
+        return Room.databaseBuilder(
+            context.applicationContext,
+            RealEstateRoomDatabase::class.java,
+            "estate_manager_database"
+        )
+            .addCallback(EstateDatabaseCallback(context, scope))
+            .build()
     }
 
     private class EstateDatabaseCallback(
+        private val context: Context,
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
 
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
-            INSTANCE?.let { database ->
+            getDatabase(context, scope).let { database ->
                 scope.launch {
                     populateDatabase(database.estateDao())
                 }

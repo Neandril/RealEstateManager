@@ -1,14 +1,12 @@
 package com.neandril.realestatemanager.views.fragments
 
 
-import android.util.Log
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.neandril.realestatemanager.R
-import com.neandril.realestatemanager.models.Estate
 import com.neandril.realestatemanager.models.FilterModel
 import com.neandril.realestatemanager.viewmodels.EstateViewModel
 import com.neandril.realestatemanager.viewmodels.FilterInteractionViewModel
@@ -29,6 +27,8 @@ class FragmentMain : BaseFragment() {
     }
 
     override fun configureFragment() {
+        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
+
         //this.configureRecyclerView()
     }
 
@@ -38,50 +38,32 @@ class FragmentMain : BaseFragment() {
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
 
-        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-        estateViewModel.allEstates.observe(this, Observer { estates ->
+        estateViewModel.getEstates().observe(this, Observer { estates ->
             estates.let { adapter.setEstate(it) }
         })
+
+        estateViewModel.init()
     }
 
     override fun onResume() {
         super.onResume()
+        configureRecyclerView()
 
         filterInteraction.observeFilter().observe(this, Observer {
             if (it != null) {
-                buildRequest(it)
+                buildRequest(it)  
+            } else {
+                estateViewModel.init()
             }
         })
-
-/*        val filter = bundle?.getSerializable("FILTER") as FilterModel
-        Log.d("onResume", "Filter: " + filter.minSurface + " - " + filter.maxSurface)*/
-
-        configureRecyclerView()
     }
 
     private fun buildRequest(filter: FilterModel) {
         val type = filter.estateType?.joinToString(",","", "") ?: ""
         val pointsOfInterest = filter.estatePois?.joinToString(",","", "") ?: ""
 
-        estateViewModel = ViewModelProvider(this).get(EstateViewModel::class.java)
-
         estateViewModel.getFiltered(filter.minPrice, filter.maxPrice, filter.minSurface, filter.maxSurface,
             filter.nbRooms?: 0, type, pointsOfInterest, filter.location?: "",
-            filter.isSold, filter.displayOnlyPhotos
-        ).observe(viewLifecycleOwner, Observer {estates ->
-
-            val recyclerView = activity?.findViewById<RecyclerView>(R.id.recyclerview)
-            val adapter = MainRecyclerViewAdapter(activity?.applicationContext!!)
-            recyclerView?.adapter = adapter
-            recyclerView?.layoutManager = LinearLayoutManager(activity?.applicationContext!!)
-
-            estates.let {
-                adapter.setEstate(it)
-            }
-/*            adapter.setEstate(
-            estates.filter {
-                it.estatePhotos?.size?: 0 > 1
-            })*/
-        })
+            filter.isSold, filter.displayOnlyPhotos)
     }
 }

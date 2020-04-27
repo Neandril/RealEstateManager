@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.fragments.FragmentEstateDetails">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/std_margin" >
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                app:layout_constraintBottom_toTopOf="@id/dots_indicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                android:id="@+id/dots_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:dotsColor="@color/colorWhite"
+                app:dotsCornerRadius="8dp"
+                app:dotsSize="8dp"
+                app:dotsSpacing="4dp"
+                app:dotsWidthFactor="2.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_pager"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_price"
+                app:progressMode="false"
+                app:selectedDotColor="@color/colorSecondary"
+                />
+
+            <TextView
+                android:id="@+id/textView_details_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/std_margin"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dots_indicator"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_price"
+                tools:text="VILLA"/>
+
+            <TextView
+                android:id="@+id/textView_details_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_price"
+                android:drawablePadding="@dimen/std_padding"
+                android:layout_margin="@dimen/std_margin"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dots_indicator"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_description"
+                app:layout_constraintEnd_toStartOf="@id/textView_details_surface"
+                tools:text="2 500 000"/>
+
+            <TextView
+                android:id="@+id/textView_details_surface"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:drawableStart="@drawable/ic_surface"
+                android:drawablePadding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintStart_toEndOf="@id/textView_details_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_type"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_description"
+                tools:text="125 m²" />
+
+            <TextView
+                android:id="@+id/textView_details_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat."
+                app:layout_constraintTop_toBottomOf="@id/textView_details_surface"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_nbBedrooms"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/textView_details_nbBathrooms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:padding="@dimen/std_padding"
+                android:drawableStart="@drawable/ic_bathroom"
+                android:drawablePadding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_mid"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_description"
+                app:layout_constraintEnd_toStartOf="@id/textView_details_nbBedrooms"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="3" />
+
+            <TextView
+                android:id="@+id/textView_details_nbBedrooms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:padding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_mid"
+                android:drawableStart="@drawable/ic_bedroom"
+                android:drawablePadding="@dimen/std_padding"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_description"
+                app:layout_constraintStart_toEndOf="@id/textView_details_nbBathrooms"
+                app:layout_constraintEnd_toStartOf="@id/textView_details_nbTotal"
+                tools:text="3" />
+
+            <TextView
+                android:id="@+id/textView_details_nbTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:padding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_mid"
+                android:drawableStart="@drawable/ic_total_rooms"
+                android:drawablePadding="@dimen/std_padding"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_description"
+                app:layout_constraintStart_toEndOf="@id/textView_details_nbBedrooms"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="3" />
+
+            <TextView
+                android:id="@+id/textView_details_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:drawableStart="@drawable/ic_place"
+                android:drawablePadding="@dimen/std_padding"
+                android:padding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_small"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_nbBedrooms"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_points_of_interest"
+                app:layout_constraintEnd_toStartOf="@id/map_thumbnail"
+                tools:text="New Jersey - Turnpike - Kearny - NJ - Etats-Unis" />
+
+            <ImageView
+                android:id="@+id/map_thumbnail"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_margin="@dimen/std_margin"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_points_of_interest"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/textView_details_address"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_nbBedrooms"/>
+
+            <TextView
+                android:id="@+id/textView_details_points_of_interest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:textSize="@dimen/font_size_small"
+                app:layout_constraintTop_toBottomOf="@id/map_thumbnail"
+                app:layout_constraintBottom_toTopOf="@id/textView_details_agent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/textView_details_agent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:drawableStart="@drawable/ic_agent"
+                android:drawablePadding="@dimen/std_padding"
+                android:padding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_mid"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_points_of_interest"
+                tools:text="AgentName" />
+
+            <TextView
+                android:id="@+id/textView_details_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:padding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_mid"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_agent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/textView_details_soldDate"
+                tools:text="Available" />
+
+            <TextView
+                android:id="@+id/textView_details_soldDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_margin"
+                android:padding="@dimen/std_padding"
+                android:textSize="@dimen/font_size_mid"
+                app:layout_constraintTop_toBottomOf="@id/textView_details_agent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/textView_details_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="SoldDate" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

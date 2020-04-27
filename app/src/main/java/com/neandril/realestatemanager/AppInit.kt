@@ -15,7 +15,7 @@ class AppInit: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(TAG, "onCreate: Entry Point of the application")
+        Log.d(TAG, "onCreate: dimen: ${resources.getBoolean(R.bool.isTablet)}")
         this.appContext = this.applicationContext
     }
 

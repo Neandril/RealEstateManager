@@ -10,7 +10,7 @@ import com.neandril.realestatemanager.models.FilterModel
 interface EstateDao {
 
     @Query("SELECT * from real_estate_table ORDER BY id ASC")
-    fun getAllEstates(): LiveData<List<Estate>>
+    suspend fun getAllEstates(): List<Estate>
 
     @Query("SELECT * FROM real_estate_table WHERE id=:id")
     fun getSingleEstate(id: Int): LiveData<Estate>
@@ -25,7 +25,7 @@ interface EstateDao {
     suspend fun updateEstate(estate: Estate)
 
     @RawQuery(observedEntities = [Estate::class])
-    fun getFiltered(query: SupportSQLiteQuery) : LiveData<List<Estate>>
+    suspend fun getFiltered(query: SupportSQLiteQuery) : List<Estate>
 
     @Query("SELECT * FROM real_estate_table ORDER BY price DESC")
     fun getEstateByPrice(): LiveData<List<Estate>>

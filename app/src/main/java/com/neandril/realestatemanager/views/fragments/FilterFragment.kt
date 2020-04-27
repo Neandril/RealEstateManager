@@ -50,7 +50,6 @@ class FilterFragment : BottomSheetDialogFragment() {
     private lateinit var cbIsSold: CheckBox
     private lateinit var cbPhotos: CheckBox
 
-    private var maxPrice: Float = 0f
 
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
 
@@ -74,7 +73,9 @@ class FilterFragment : BottomSheetDialogFragment() {
         configureButtonsClicks(root)
 
         filterInteraction.getFilter().observe(viewLifecycleOwner, Observer {
-            fillFragment(it)
+            if (it != null) {
+                fillFragment(it)
+            }
         })
 
         return root
@@ -145,7 +146,7 @@ class FilterFragment : BottomSheetDialogFragment() {
 
         btnOk.setOnClickListener {
             val filterRooms = if (!editTextRooms.text.isNullOrEmpty()) editTextRooms.text.toString().toInt() else 0
-            val filterLocality = if (!editTextLocality.text.isNullOrEmpty()) getString(R.string.filter_locality_format, editTextLocality.text.toString()) else getString(R.string.null_or_empty)
+            val filterLocality = if (!editTextLocality.text.isNullOrEmpty()) editTextLocality.text.toString() else ""
             val minPrice = seekbarPrice.selectedMinValue.toInt()
             val maxPrice = seekbarPrice.selectedMaxValue.toInt()
             val minSurface = seekbarSurface.selectedMinValue.toInt()
@@ -155,6 +156,8 @@ class FilterFragment : BottomSheetDialogFragment() {
                 filterRooms, getSelectedChips(chipGroupTypes), getSelectedChips(chipGroupPois),
                 filterLocality, cbIsSold.isChecked, cbPhotos.isChecked)
 
+            Log.d("Filter", "Locality: $filterLocality")
+
             filterInteraction.setFilter(filter)
 
             dialog?.dismiss()
@@ -162,16 +165,12 @@ class FilterFragment : BottomSheetDialogFragment() {
 
         btnCancel.setOnClickListener {
             Log.d("FilterFragment", "Clicked on: Cancel")
-
             dialog?.dismiss()
         }
 
         btnResetAll.setOnClickListener {
             Log.d("FilterFragment", "Clicked on: Reset all")
-            val filter: FilterModel? = null
-            if (filter != null) {
-                filterInteraction.setFilter(filter)
-            }
+            filterInteraction.setFilter(null)
 
             dialog?.dismiss()
         }

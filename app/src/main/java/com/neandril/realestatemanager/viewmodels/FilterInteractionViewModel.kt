@@ -11,7 +11,7 @@ class FilterInteractionViewModel : ViewModel() {
 
     fun observeFilter(): LiveData<FilterModel> = filterModel
 
-    fun setFilter(filterModel: FilterModel) {
+    fun setFilter(filterModel: FilterModel?) {
         this.filterModel.postValue(filterModel)
     }
 
